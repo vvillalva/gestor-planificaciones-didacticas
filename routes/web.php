@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsuarioController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
+Route::resource('usuarios', UsuarioController::class)->names('usuarios');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
