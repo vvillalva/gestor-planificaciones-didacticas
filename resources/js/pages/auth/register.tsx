@@ -13,6 +13,7 @@ type RegisterForm = {
     apellido: string;
     correo: string;
     password: string;
+    rol: string;
     password_confirmation: string;
 };
 
@@ -25,6 +26,7 @@ export default function Register() {
         apellido: '',
         correo: '',
         password: '',
+        rol: 'Administrador',
         password_confirmation: '',
     });
 

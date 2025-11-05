@@ -3,9 +3,11 @@ import { Head } from '@inertiajs/react';
 //** Components */
 import AppLayout from '@/layouts/app-layout';
 //** Interfaces or Types */
-import type {  BreadcrumbItem } from '@/types';
+import type { BreadcrumbItem } from '@/types';
+import Encabezado from '@/components/encabezado';
 import { Users } from 'lucide-react';
-
+import { DataTable } from '@/components/datatable/datatable';
+import { columnasUsuario } from '@/components/datatable/column';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,8 +18,23 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function ListUsers({ usuarios = [] }: { usuarios: [] }) {
     return (
-           <div className="flex text-red-800 h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-8">
-                Hola, como estas? 
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Usuarios" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-8">
+                <Encabezado
+                    title="Usuarios"
+                    description="Revisa los diferentes usuarios registrados dentro del sistema."
+                    icon={<Users className="h-[20px] w-[20px]" />}
+                />
+                <DataTable
+                    columns={columnasUsuario}
+                    data={usuarios}
+                    resourceName="usuarios"
+                    labelButton="Nuevo usuario"
+                    placeholderFilter="Buscar por nombre..."
+                    filter="name"
+                />
             </div>
+        </AppLayout>
     );
 }

@@ -12,6 +12,7 @@ import InputError from '@/components/input-error';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Encabezado from '@/components/encabezado';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -35,7 +36,7 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
         email: '',
         password: '',
         confirm_password: '',
-        rol: '',
+        rol: 'Administrador',
     });
 
     const createUser: FormEventHandler = (e) => {
@@ -51,12 +52,14 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                 console.log('Petición finalizada');
             },
         });
+         
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Crear usuario" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-8">
+                <Encabezado title="Nuevo Usuario" description="Revisa los diferentes usuarios registrados dentro del sistema." separator={true}/>
                 <form onSubmit={createUser} className="flex flex-col gap-10 pt-10">
                     <div className="nombre flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                         <div className="w-full lg:w-[300px]">
@@ -219,13 +222,13 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                             </div>
                         </div>
                     </div>
-                    <div className="rol flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                    {/* <div className="rol flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                         <div className="w-full lg:w-[300px]">
                             <Label id="rol" className="font-medium">
                                 Rol
                             </Label>
                         </div>
-                        {/* <div className="flex w-full flex-col gap-4 lg:w-[405px]">
+                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
                             <div className="flex flex-col gap-2">
                                 <Select value={data.rol} onValueChange={(value) => setData('rol', value)}>
                                     <SelectTrigger className="w-full">
@@ -245,8 +248,8 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                                     <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
                             </div>
-                        </div> */}
-                    </div>
+                        </div>
+                    </div> */}
                     <Separator />
                     <div className="flex flex-row justify-end">
                         <Button disabled={processing} type="submit" className="w-full md:w-[140px]">
@@ -254,7 +257,6 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                         </Button>
                     </div>
                 </form>
-
             </div>
         </AppLayout>
     );
