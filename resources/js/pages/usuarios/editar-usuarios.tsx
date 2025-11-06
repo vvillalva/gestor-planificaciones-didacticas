@@ -12,6 +12,7 @@ import InputError from '@/components/input-error';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Encabezado from '@/components/encabezado';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -20,27 +21,36 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/usuarios',
     },
     {
-        title: 'Nuevo Usuario',
-        href: '/agregar-usuarios',
+        title: 'Editar Usuario',
+        href: '/editar-usuarios',
     },
 ];
 
-export default function Editarusuarios({ roles=[] }: { roles:[] }) {
+interface Usuario {
+    id: number;
+    nombre: string;
+    apellido: string;
+    correo: string;
+    password: string;
+    rol: string;
+}
+
+export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, roles:[] }) {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const { data, setData, errors, post, processing } = useForm({
-        name: '',
-        lastname: '',
-        email: '',
-        password: '',
-        confirm_password: '',
-        rol: '',
+    const { data, setData, errors, put, processing } = useForm({
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        correo: usuario.correo,
+        password: usuario.password,
+        confirm_password: usuario.password,
+        rol: usuario.rol,
     });
 
     const createUser: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('usuarios.store'), {
+        put(route('usuarios.update', usuario.id), {
             onSuccess: () => {
                 console.log('Usuario creado correctamente');
             },
@@ -55,8 +65,13 @@ export default function Editarusuarios({ roles=[] }: { roles:[] }) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Crear usuario" />
+            <Head title="Editar usuario" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-8">
+                <Encabezado
+                    title="Editar Usuario"
+                    description="Revisa los diferentes usuarios registrados dentro del sistema."
+                    separator={true}
+                />
                 <form onSubmit={createUser} className="flex flex-col gap-10 pt-10">
                     <div className="nombre flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                         <div className="w-full lg:w-[300px]">
@@ -69,13 +84,12 @@ export default function Editarusuarios({ roles=[] }: { roles:[] }) {
                                 <Input
                                     id="name"
                                     type="text"
-                                    value={data.name}
-                                    required
-                                    onChange={(e) => setData('name', e.target.value)}
+                                    value={data.nombre}
+                                    onChange={(e) => setData('nombre', e.target.value)}
                                     placeholder="e.j. Juan Manuel"
                                 />
-                                {errors.name ? (
-                                    <InputError message={errors.name} />
+                                {errors.nombre ? (
+                                    <InputError message={errors.nombre} />
                                 ) : (
                                     <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
@@ -93,13 +107,12 @@ export default function Editarusuarios({ roles=[] }: { roles:[] }) {
                                 <Input
                                     id="lastname"
                                     type="text"
-                                    value={data.lastname}
-                                    required
-                                    onChange={(e) => setData('lastname', e.target.value)}
+                                    value={data.apellido}
+                                    onChange={(e) => setData('apellido', e.target.value)}
                                     placeholder="e.j. Mendez Perez"
                                 />
-                                {errors.name ? (
-                                    <InputError message={errors.lastname} />
+                                {errors.apellido ? (
+                                    <InputError message={errors.apellido} />
                                 ) : (
                                     <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
@@ -118,13 +131,12 @@ export default function Editarusuarios({ roles=[] }: { roles:[] }) {
                                     id="email"
                                     type="email"
                                     autoComplete="email"
-                                    required
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
+                                    value={data.correo}
+                                    onChange={(e) => setData('correo', e.target.value)}
                                     placeholder="e.j. juan.manuel@example.com"
                                 />
-                                {errors.email ? (
-                                    <InputError message={errors.email} />
+                                {errors.correo ? (
+                                    <InputError message={errors.correo} />
                                 ) : (
                                     <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
@@ -144,7 +156,6 @@ export default function Editarusuarios({ roles=[] }: { roles:[] }) {
                                         id="password"
                                         type={showCurrentPassword ? 'text' : 'password'}
                                         autoComplete="current-password"
-                                        required
                                         value={data.password}
                                         onChange={(e) => setData('password', e.target.value)}
                                         placeholder="********"
@@ -189,7 +200,6 @@ export default function Editarusuarios({ roles=[] }: { roles:[] }) {
                                         id="confirm_password"
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         autoComplete="current-password"
-                                        required
                                         value={data.confirm_password}
                                         onChange={(e) => setData('confirm_password', e.target.value)}
                                         placeholder="********"
@@ -254,7 +264,6 @@ export default function Editarusuarios({ roles=[] }: { roles:[] }) {
                         </Button>
                     </div>
                 </form>
-
             </div>
         </AppLayout>
     );

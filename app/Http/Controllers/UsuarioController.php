@@ -38,22 +38,22 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/'],
-            'lastname' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'nombre' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/'],
+            'apellido' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/'],
+            'correo' => ['required', 'string', 'email', 'max:255', 'unique:users,correo'],
             'password' => ['required', 'string', 'min:8', 'same:confirm_password', 'regex:/[A-Z]/', 'regex:/[0-9]/', 'regex:/[a-z]/'],
             'confirm_password' => ['required', 'string', 'min:8'],
             'rol' => ['required', 'string', 'max:255'],
         ], [
-            'name.required' => 'El nombre es obligatorio para el registro.',
-            'name.max' => 'El nombre excede los caracteres permitidos.',
-            'lastname.max' => 'El apellido excede los caracteres permitidos.',
-            'name.regex' => 'El nombre solo puede contener letras y espacios.',
-            'lastname.required' => 'El apellido es obligatorio para el registro.',
-            'lastname.regex' => 'El apellido solo puede contener letras y espacios.',
-            'email.required' => 'El correo electrónico es obligatorio.',
-            'email.email' => 'El formato del correo no es válido.',
-            'email.unique' => 'Este correo ya está registrado.',
+            'nombre.required' => 'El nombre es obligatorio para el registro.',
+            'nombre.max' => 'El nombre excede los caracteres permitidos.',
+            'apellido.max' => 'El apellido excede los caracteres permitidos.',
+            'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
+            'apellido.required' => 'El apellido es obligatorio para el registro.',
+            'apellido.regex' => 'El apellido solo puede contener letras y espacios.',
+            'correo.required' => 'El correo electrónico es obligatorio.',
+            'correo.email' => 'El formato del correo no es válido.',
+            'correo.unique' => 'Este correo ya está registrado.',
             'password.same' => 'Las contraseñas no coinciden, revisa que sean las mismas.',
             'password.required' => 'La contraseña es obligatoria.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
@@ -64,11 +64,11 @@ class UsuarioController extends Controller
         ]);
 
         $user = User::create(
-            $request->only(['name','lastname','email','rol']) +
+            $request->only(['nombre','apellido','correo','rol']) +
             ['password' => Hash::make($request->password)]
         );
 
-        $user->syncRoles([$request->rol]);
+        //$user->syncRoles([$request->rol]);
 
         return to_route('usuarios.index');
     }
@@ -88,7 +88,7 @@ class UsuarioController extends Controller
     {
         $user = User::find($id);
         return Inertia::render("usuarios/editar-usuarios", [
-            'user' => $user,
+            'usuario' => $user,
         ]);
     }
 
@@ -98,9 +98,9 @@ class UsuarioController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => ['sometimes', 'string', 'max:255', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/'],
-            'lastname' => ['sometimes', 'string', 'max:255', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/'],
-            'email' => ['sometimes', 'string', 'email'],
+            'nombre' => ['sometimes', 'string', 'max:255', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/'],
+            'apellido' => ['sometimes', 'string', 'max:255', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/'],
+            'correo' => ['sometimes', 'string', 'email'],
             'password' => [
                 'sometimes',
                 'string',
@@ -112,21 +112,20 @@ class UsuarioController extends Controller
             ],
             'confirm_password' => ['sometimes', 'string', 'min:8'],
             'rol' => ['sometimes', 'string'],
-            'status' => ['sometimes', 'boolean'],
         ], [
             // 🧩 Nombre
-            'name.string' => 'El nombre debe ser una cadena de texto.',
-            'name.max' => 'El nombre no puede superar los 255 caracteres.',
-            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'nombre.string' => 'El nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre no puede superar los 255 caracteres.',
+            'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
 
             // 🧩 Apellido
-            'lastname.string' => 'El apellido debe ser una cadena de texto.',
-            'lastname.max' => 'El apellido no puede superar los 255 caracteres.',
-            'lastname.regex' => 'El apellido solo puede contener letras y espacios.',
+            'apellido.string' => 'El apellido debe ser una cadena de texto.',
+            'apellido.max' => 'El apellido no puede superar los 255 caracteres.',
+            'apellido.regex' => 'El apellido solo puede contener letras y espacios.',
 
             // 🧩 Correo electrónico
-            'email.string' => 'El correo electrónico debe ser una cadena de texto válida.',
-            'email.email' => 'El formato del correo electrónico no es válido.',
+            'correo.string' => 'El correo electrónico debe ser una cadena de texto válida.',
+            'correo.email' => 'El formato del correo electrónico no es válido.',
 
             // 🧩 Contraseña
             'password.string' => 'La contraseña debe ser una cadena de texto.',
@@ -140,19 +139,16 @@ class UsuarioController extends Controller
 
             // 🧩 Rol
             'rol.string' => 'El rol debe ser alguna de las opciones disponibles.',
-
-            // 🧩 Estado
-            'status.boolean' => 'El estado debe ser activo o inactivo.',
         ]);
 
         $user = User::find($id);
         
         $user->update(
-            $request->only(['name','lastname','email','rol']) +
+            $request->only(['nombre','apellido','correo','rol']) +
             ['password' => Hash::make($request->password)]
         );
 
-        $user->syncRoles([$request->rol]);
+        //$user->syncRoles([$request->rol]);
 
         return to_route('usuarios.index');
     }

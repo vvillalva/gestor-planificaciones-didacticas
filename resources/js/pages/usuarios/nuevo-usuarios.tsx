@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Encabezado from '@/components/encabezado';
 
-
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Lista de Usuarios',
@@ -31,9 +30,9 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const { data, setData, errors, post, processing } = useForm({
-        name: '',
-        lastname: '',
-        email: '',
+        nombre: '',
+        apellido: '',
+        correo: '',
         password: '',
         confirm_password: '',
         rol: 'Administrador',
@@ -72,13 +71,13 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                                 <Input
                                     id="name"
                                     type="text"
-                                    value={data.name}
+                                    value={data.nombre}
                                     required
-                                    onChange={(e) => setData('name', e.target.value)}
+                                    onChange={(e) => setData('nombre', e.target.value)}
                                     placeholder="e.j. Juan Manuel"
                                 />
-                                {errors.name ? (
-                                    <InputError message={errors.name} />
+                                {errors.nombre ? (
+                                    <InputError message={errors.nombre} />
                                 ) : (
                                     <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
@@ -96,13 +95,13 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                                 <Input
                                     id="lastname"
                                     type="text"
-                                    value={data.lastname}
+                                    value={data.apellido}
                                     required
-                                    onChange={(e) => setData('lastname', e.target.value)}
+                                    onChange={(e) => setData('apellido', e.target.value)}
                                     placeholder="e.j. Mendez Perez"
                                 />
-                                {errors.name ? (
-                                    <InputError message={errors.lastname} />
+                                {errors.apellido ? (
+                                    <InputError message={errors.apellido} />
                                 ) : (
                                     <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
@@ -122,12 +121,12 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                                     type="email"
                                     autoComplete="email"
                                     required
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
+                                    value={data.correo}
+                                    onChange={(e) => setData('correo', e.target.value)}
                                     placeholder="e.j. juan.manuel@example.com"
                                 />
-                                {errors.email ? (
-                                    <InputError message={errors.email} />
+                                {errors.correo ? (
+                                    <InputError message={errors.correo} />
                                 ) : (
                                     <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
