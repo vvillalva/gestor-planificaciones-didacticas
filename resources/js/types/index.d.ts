@@ -41,3 +41,11 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Documento{
+    id:number;
+    created_at: string;
+    ruta: string;
+    nombre: string;
+    tipo: string;
+}

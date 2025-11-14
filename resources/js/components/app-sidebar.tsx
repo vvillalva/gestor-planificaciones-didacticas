@@ -15,7 +15,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Planeaciones',
-        href: '/casos',
+        href: '/planeaciones',
         icon: BookOpen,
     },
     {

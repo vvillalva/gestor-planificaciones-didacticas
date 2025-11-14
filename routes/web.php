@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PlaneacionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use Inertia\Inertia;
@@ -14,6 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
     
     Route::resource('usuarios', UsuarioController::class)->names('usuarios');
+    Route::resource('planeaciones', PlaneacionController::class)->names('planeaciones');
 });
 
 require __DIR__.'/settings.php';

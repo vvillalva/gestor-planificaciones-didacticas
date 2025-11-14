@@ -3,7 +3,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 // import { useDeleteAlert } from '@/hooks/useDeleteAlert';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
+import { ArrowUpDown, CircleCheck, EllipsisVertical, Loader, LoaderCircle, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -262,5 +262,150 @@ export const columnasRoles: ColumnDef<ColumnaRol>[] = [
     {
         id: 'actions',
         cell: ({ row }) => <ActionsCellRoles row={row} />,
+    },
+];
+
+//** Configuración de Tabla Planeaciones */
+export type ColumnaPlaneacion = {
+    id: number;
+    titulo: string;
+    estatus: string;
+    created_at: string;
+};
+
+function ActionsCellPlaneacion({ row }: { row: { original: RowData } }) {
+    const [menuOpen, setMenuOpen] = useState(false);
+    // const { onDeleteClick } = useDeleteAlert('usuarios.destroy');
+    // const { has, hasAny } = useCan();
+    return (
+        <>
+            <div className="flex flex-row justify-end">
+                <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
+                            <EllipsisVertical />
+                            <span className="sr-only">Opciones</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-32">
+                        <DropdownMenuItem>
+                            <Link href={route('planeaciones.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
+                                <Pencil /> Editar
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem variant="destructive">
+                            <Trash2 />
+                            Borrar
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        </>
+    );
+}
+
+export const columnasPlaneaciones: ColumnDef<ColumnaPlaneacion>[] = [
+    {
+        accessorKey: 'id',
+        header: ({ column }) => {
+            return (
+                <div className="w-20">
+                    <Button className="flex" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Identificador
+                        <ArrowUpDown />
+                    </Button>
+                </div>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="pl-3 lowercase">
+                <span>{row.getValue('id')}</span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'titulo',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Titulo
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => {
+            return (
+                <div className="w-full pl-3">
+                    <span>{row.original.titulo || 'Sin título'}</span>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: 'estatus',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Estatus
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => {
+            const estatus = row.original.estatus;
+
+            // Puedes usar colores diferentes para cada estatus si quieres
+            let icon = null;
+            let text = null;
+            let badgeClass = 'text-muted-foreground px-1.5';
+
+            if (estatus === 'atendido') {
+                icon = <CircleCheck className="fill-green-600 text-green-300 dark:fill-green-700" />;
+                text = <p className="text-green-700 dark:text-green-500">Atendido</p>;
+                badgeClass += ' border-green-600 bg-status-card'; // Puedes agregar más clases
+            } else if (estatus === 'en-proceso') {
+                icon = <LoaderCircle className="animate-spin text-yellow-500" />;
+                text = <p className="text-yellow-500">En Proceso</p>;
+                badgeClass += ' border-yellow-500 text-yellow-600 bg-status-card';
+            } else {
+                icon = <Loader />;
+                text = <p>En Espera</p>;
+                badgeClass += ' border-neutral-500 bg-status-card';
+            }
+
+            return (
+                <Badge variant="outline" className={badgeClass}>
+                    {icon} {text}
+                </Badge>
+            );
+        },
+    },
+    {
+        accessorKey: 'created_at',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Fecha de registro
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>
+                    {new Date(row.getValue('created_at')).toLocaleString('es-MX', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    })}
+                </span>
+            </div>
+        ),
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <ActionsCellPlaneacion row={row} />,
     },
 ];
