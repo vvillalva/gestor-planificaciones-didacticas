@@ -32,6 +32,8 @@ export default function CrearPlaneacion() {
         //Cedula
         titulo: '',
         descripcion: '',
+        grado: '',
+        grupo: '',
         //Entrevista Psicologica
         planeacion_archivo: null as File | null,
     });
@@ -74,6 +76,54 @@ export default function CrearPlaneacion() {
                                     <InputError message={errors.titulo} />
                                 ) : (
                                     <Label className="text-muted-foreground text-sm font-normal">Ingresa un nombre de planeación entendible</Label>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="grado flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                        <div className="w-full lg:w-[300px]">
+                            <Label id="grado" className="font-medium">
+                                Grado
+                            </Label>
+                        </div>
+                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
+                            <div className="flex flex-col gap-2">
+                                <Input
+                                    id="grado"
+                                    type="text"
+                                    value={data.grado}
+                                    required
+                                    onChange={(e) => setData('grado', e.target.value)}
+                                    placeholder="e.j. 5to."
+                                />
+                                {errors.grado ? (
+                                    <InputError message={errors.grado} />
+                                ) : (
+                                    <Label className="text-muted-foreground text-sm font-normal"></Label>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="grupo flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                        <div className="w-full lg:w-[300px]">
+                            <Label id="grupo" className="font-medium">
+                                Grupo
+                            </Label>
+                        </div>
+                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
+                            <div className="flex flex-col gap-2">
+                                <Input
+                                    id="grupo"
+                                    type="text"
+                                    value={data.grupo}
+                                    required
+                                    onChange={(e) => setData('grupo', e.target.value)}
+                                    placeholder="e.j. A"
+                                />
+                                {errors.grupo ? (
+                                    <InputError message={errors.grupo} />
+                                ) : (
+                                    <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
                             </div>
                         </div>

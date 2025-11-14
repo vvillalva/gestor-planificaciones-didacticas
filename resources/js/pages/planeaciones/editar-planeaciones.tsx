@@ -6,15 +6,15 @@ import AppLayout from '@/layouts/app-layout';
 //** Interfaces or Types */
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import type { BreadcrumbItem, Documento } from '@/types';
-import { FileUp, LoaderCircle, MoreVertical, Trash2, File } from 'lucide-react';
-import { FormEventHandler } from 'react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { usePlaneacionArchivo } from '@/hooks/useDocumentos';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { usePlaneacionArchivo } from '@/hooks/useDocumentos';
+import type { BreadcrumbItem, Documento } from '@/types';
+import { File, FileUp, LoaderCircle, MoreVertical, Trash2 } from 'lucide-react';
+import { FormEventHandler } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,19 +28,23 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface Planeacion {
-    id:number;
-    titulo:string;
-    descripcion:string;
-    estatus:string;
-    documents:Documento;
+    id: number;
+    titulo: string;
+    descripcion: string;
+    estatus: string;
+    grado: string;
+    grupo: string;
+    documents: Documento;
 }
 
-export default function CrearPlaneacion({planeacion}:{planeacion:Planeacion}) {
+export default function CrearPlaneacion({ planeacion }: { planeacion: Planeacion }) {
     const { data, setData, post, processing, errors } = useForm({
         _method: 'PUT',
         estatus: planeacion.estatus,
         titulo: planeacion.titulo,
         descripcion: planeacion.descripcion,
+        grado: planeacion.grado,
+        grupo: planeacion.grupo,
         planeacion_archivo: null as File | null,
     });
 
@@ -94,6 +98,54 @@ export default function CrearPlaneacion({planeacion}:{planeacion:Planeacion}) {
                             </div>
                         </div>
                     </div>
+                    <div className="grado flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                        <div className="w-full lg:w-[300px]">
+                            <Label id="grado" className="font-medium">
+                                Grado
+                            </Label>
+                        </div>
+                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
+                            <div className="flex flex-col gap-2">
+                                <Input
+                                    id="grado"
+                                    type="text"
+                                    value={data.grado}
+                                    required
+                                    onChange={(e) => setData('grado', e.target.value)}
+                                    placeholder="e.j. 5to."
+                                />
+                                {errors.grado ? (
+                                    <InputError message={errors.grado} />
+                                ) : (
+                                    <Label className="text-muted-foreground text-sm font-normal"></Label>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="grupo flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                        <div className="w-full lg:w-[300px]">
+                            <Label id="grupo" className="font-medium">
+                                Grupo
+                            </Label>
+                        </div>
+                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
+                            <div className="flex flex-col gap-2">
+                                <Input
+                                    id="grupo"
+                                    type="text"
+                                    value={data.grupo}
+                                    required
+                                    onChange={(e) => setData('grupo', e.target.value)}
+                                    placeholder="e.j. A"
+                                />
+                                {errors.grupo ? (
+                                    <InputError message={errors.grupo} />
+                                ) : (
+                                    <Label className="text-muted-foreground text-sm font-normal"></Label>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                     <div className="descripcion flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                         <div className="w-full lg:w-[300px]">
                             <Label id="relato" className="font-medium">
@@ -120,7 +172,7 @@ export default function CrearPlaneacion({planeacion}:{planeacion:Planeacion}) {
                             </div>
                         </div>
                     </div>
-                    <div className="tipo_violencia flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                    <div className="archivo flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                         <div className="w-full lg:w-[300px]">
                             <Label id="type_violence" className="font-medium">
                                 Archivo de la entrevista

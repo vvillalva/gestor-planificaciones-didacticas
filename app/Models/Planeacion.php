@@ -15,6 +15,8 @@ class Planeacion extends Model
         'titulo',
         'estatus',
         'descripcion',
+        'grado',
+        'grupo',
         'usuario_id',
         'created_at',
         'updated_at',

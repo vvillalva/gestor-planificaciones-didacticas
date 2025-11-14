@@ -41,11 +41,14 @@ class PlaneacionController extends Controller
                 'titulo' => 'required|string|max:255',
                 'descripcion' => 'required|string',
                 'planeacion_archivo' => 'required|file|mimes:pdf,doc,docx,png,jpg,jpeg|max:5120',
-
+                'grado' => 'nullable|string|max:10',
+                'grupo' => 'nullable|string|max:2',
             ],
             [
                 'titulo.max' => 'El título no puede exceder los 255 caracteres.',
                 'titulo.required' => 'El título es obligatorio.',
+                'grado.max' => 'Por favor ingrese un grado válido.',
+                'grupo.max' => 'Por favor ingresa un grupo válido.',
                 'descripcion.required' => 'La descripción es obligatoria.',
                 'planeacion_archivo.max' => 'El archivo no puede exceder los 5 MB.',
                 'planeacion_archivo.mimes' => 'El archivo debe ser un tipo válido: pdf, doc, docx, png, jpg, jpeg.',
@@ -58,6 +61,8 @@ class PlaneacionController extends Controller
             'titulo' => $request->titulo,
             'descripcion' => $request->descripcion,
             'estatus' => 'en_revision',
+            'grado' => $request->grado,
+            'grupo' => $request->grupo,
             'usuario_id' => Auth::id(),
         ]);
 
