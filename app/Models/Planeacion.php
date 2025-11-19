@@ -11,15 +11,12 @@ class Planeacion extends Model
 
     protected $table = 'planeaciones';
     protected $fillable = [
-        'id',
         'titulo',
         'estatus',
         'descripcion',
         'grado',
         'grupo',
         'usuario_id',
-        'created_at',
-        'updated_at',
     ];
 
     public function usuario()

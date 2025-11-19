@@ -7,6 +7,8 @@ import { ArrowUpDown, CircleCheck, EllipsisVertical, Loader, LoaderCircle, Penci
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import ViewDataPlaneacion from '../ui/view-data-planeacion';
+import { Documento } from '@/types';
 
 type RowData = { id: number };
 
@@ -266,6 +268,16 @@ export const columnasRoles: ColumnDef<ColumnaRol>[] = [
 ];
 
 //** Configuración de Tabla Planeaciones */
+type RowDataPlaneacion = { 
+    id: number;
+    titulo: string;
+    descripcion: string;
+    estatus: string;
+    grado: string;
+    grupo: string;
+    documents: Documento;
+};
+
 export type ColumnaPlaneacion = {
     id: number;
     titulo: string;
@@ -273,8 +285,9 @@ export type ColumnaPlaneacion = {
     created_at: string;
 };
 
-function ActionsCellPlaneacion({ row }: { row: { original: RowData } }) {
+function ActionsCellPlaneacion({ row }: { row: { original: RowDataPlaneacion } }) {
     const [menuOpen, setMenuOpen] = useState(false);
+    console.log(row.original);
     // const { onDeleteClick } = useDeleteAlert('usuarios.destroy');
     // const { has, hasAny } = useCan();
     return (
@@ -293,6 +306,7 @@ function ActionsCellPlaneacion({ row }: { row: { original: RowData } }) {
                                 <Pencil /> Editar
                             </Link>
                         </DropdownMenuItem>
+                        <ViewDataPlaneacion planeacion={row.original} />
                         <DropdownMenuItem variant="destructive">
                             <Trash2 />
                             Borrar

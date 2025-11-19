@@ -48,8 +48,6 @@ export default function CrearPlaneacion({ planeacion }: { planeacion: Planeacion
         planeacion_archivo: null as File | null,
     });
 
-    console.log(planeacion); //TODO: TRAER TAMBIEN LOS DOCUMENTOS RELACIONADO EN EL CONTROLADOR CON WITH::
-
     // 🔹 No hay documentos previos todavía, así que pasamos un array vacío
     const documentos = Array.isArray(planeacion.documents) ? planeacion.documents : planeacion.documents ? [planeacion.documents] : [];
 

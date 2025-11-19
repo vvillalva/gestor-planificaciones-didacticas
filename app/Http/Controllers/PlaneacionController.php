@@ -6,6 +6,7 @@ use App\Models\Documento;
 use App\Models\Planeacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PlaneacionController extends Controller
@@ -13,7 +14,7 @@ class PlaneacionController extends Controller
     public function index()
     {
         $user = Auth::user();
-                // Si el usuario es administrador, ve todos los casos
+        // Si el usuario es administrador, ve todos los casos
         // if ($user->hasRole('Director') || $user->hasRole('Administrador')) {
         //     $cases = Planeacion::with('victim_id')->get();
         // } else {
@@ -22,8 +23,7 @@ class PlaneacionController extends Controller
         //         ->where('user_id' , $user->id) // o 'user_id' según tu campo
         //         ->get();
         // }
-        $planeaciones = Planeacion::all();
-
+        $planeaciones = Planeacion::with('documents')->get();
         return Inertia::render('planeaciones/lista-planeaciones', [
             'planeaciones' => $planeaciones
         ]);
@@ -122,7 +122,32 @@ class PlaneacionController extends Controller
 
     public function update(Request $request, Planeacion $planeacion)
     {
-        //
+        // 🔹 Validación
+        $request->validate(
+            [
+                'titulo' => ['sometimes', 'filled', 'string', 'max:255'],
+                'descripcion' => ['sometimes', 'filled', 'string'],
+                'grado' => ['sometimes', 'filled', 'string'],
+                'grupo' => ['sometimes', 'filled', 'string'],
+                // Archivo (opcional)
+                'planeacion_archivo' => [
+                    'nullable',
+                    'file',
+                    'mimes:pdf,doc,docx,png,jpg,jpeg',
+                    'max:5120'
+                ],
+            ],
+            [
+                '*.filled' => 'Por favor completa este campo.',
+                '*.max' => 'Este campo supera el límite permitido.',
+                'planeacion_archivo.mimes' => 'El archivo debe ser pdf, doc, docx, png, jpg o jpeg.',
+                'planeacion_archivo.max' => 'El archivo no puede exceder los 5 MB.',
+            ]
+        );
+
+
+        return to_route('planeaciones.index')
+            ->with('success', 'La planeación se ha actualizado correctamente.');
     }
 
     public function destroy(Planeacion $planeacion)
