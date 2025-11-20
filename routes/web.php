@@ -13,10 +13,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
-    
+
+    Route::get('/ver-documento/{path}', function ($path) {
+        $file = storage_path("app/public/" . $path);
+
+        if (!file_exists($file)) {
+            abort(404);
+        }
+        return response()->file($file); // o ->download($file)
+    })->where('path', '.*');
+
+
     Route::resource('usuarios', UsuarioController::class)->names('usuarios');
-    Route::resource('planeaciones', PlaneacionController::class)->names('planeaciones');
+    Route::resource('planeaciones', PlaneacionController::class)->names('planeaciones')->parameters([
+        'planeaciones' => 'planeacion'
+    ]);
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

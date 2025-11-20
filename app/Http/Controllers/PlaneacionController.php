@@ -7,6 +7,7 @@ use App\Models\Planeacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PlaneacionController extends Controller
@@ -123,7 +124,7 @@ class PlaneacionController extends Controller
     public function update(Request $request, Planeacion $planeacion)
     {
         // 🔹 Validación
-        $request->validate(
+        $validated = $request->validate(
             [
                 'titulo' => ['sometimes', 'filled', 'string', 'max:255'],
                 'descripcion' => ['sometimes', 'filled', 'string'],
@@ -144,6 +145,60 @@ class PlaneacionController extends Controller
                 'planeacion_archivo.max' => 'El archivo no puede exceder los 5 MB.',
             ]
         );
+
+        DB::transaction(function () use ($validated, $request, $planeacion) {
+
+            // 1️⃣ Actualizar datos simples de la planeación
+            $this->safeUpdate($planeacion, [
+                'titulo' => $validated['titulo'] ?? null,
+                'descripcion' => $validated['descripcion'] ?? null,
+                'grado' => $validated['grado'] ?? null,
+                'grupo' => $validated['grupo'] ?? null,
+            ]);
+
+            // 2️⃣ Manejar archivo (opcional)
+            if ($request->hasFile('planeacion_archivo')) {
+
+                $file = $request->file('planeacion_archivo');
+                $fileName = time() . '_' . \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+                $extension = $file->getClientOriginalExtension();
+                $fullName = $fileName . '.' . $extension;
+
+                // Buscar documento actual (si tienes más de uno, ajusta la lógica)
+                $documento = $planeacion->documents()->latest()->first();
+
+                // Borrar archivo anterior si existe
+                if ($documento && $documento->ruta) {
+                    Storage::disk('public')->delete($documento->ruta);
+                }
+
+                // Guardar nuevo archivo
+                $path = $file->storeAs(
+                    'planeaciones-documentos',
+                    $fullName,
+                    'public'
+                );
+
+                if ($documento) {
+                    // Actualizar documento existente
+                    $documento->update([
+                        'usuario_id' => Auth::id(),
+                        'nombre' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                        'tipo' => $extension,
+                        'ruta' => $path,
+                    ]);
+                } else {
+                    // Crear documento nuevo
+                    Documento::create([
+                        'planeacion_id' => $planeacion->id,
+                        'usuario_id' => Auth::id(),
+                        'nombre' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                        'tipo' => $extension,
+                        'ruta' => $path,
+                    ]);
+                }
+            }
+        });
 
 
         return to_route('planeaciones.index')
