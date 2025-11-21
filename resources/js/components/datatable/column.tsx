@@ -1,6 +1,5 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 // import { useCan } from '@/hooks/useCan';
-// import { useDeleteAlert } from '@/hooks/useDeleteAlert';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, CircleCheck, EllipsisVertical, Loader, LoaderCircle, Pencil, Trash2 } from 'lucide-react';
@@ -9,6 +8,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import ViewDataPlaneacion from '../ui/view-data-planeacion';
 import { Documento } from '@/types';
+import { useDeleteAlert } from '@/hooks/useDeleteAlert';
 
 type RowData = { id: number };
 
@@ -288,7 +288,7 @@ export type ColumnaPlaneacion = {
 function ActionsCellPlaneacion({ row }: { row: { original: RowDataPlaneacion } }) {
     const [menuOpen, setMenuOpen] = useState(false);
     console.log(row.original);
-    // const { onDeleteClick } = useDeleteAlert('usuarios.destroy');
+    const { onDeleteClick } = useDeleteAlert('planeaciones.destroy');
     // const { has, hasAny } = useCan();
     return (
         <>
@@ -307,7 +307,17 @@ function ActionsCellPlaneacion({ row }: { row: { original: RowDataPlaneacion } }
                             </Link>
                         </DropdownMenuItem>
                         <ViewDataPlaneacion planeacion={row.original} />
-                        <DropdownMenuItem variant="destructive">
+                        <DropdownMenuItem
+                            variant="destructive"
+                            onSelect={async (e) => {
+                                e.preventDefault();
+                                // 1. cerramos el menú
+                                setMenuOpen(false);
+                                // 2. esperamos un frame para que cierre sin congelar
+                                await new Promise((r) => requestAnimationFrame(r));
+                                // 3. ejecutamos la eliminación
+                                onDeleteClick(row.original.id);
+                            }}>
                             <Trash2 />
                             Borrar
                         </DropdownMenuItem>

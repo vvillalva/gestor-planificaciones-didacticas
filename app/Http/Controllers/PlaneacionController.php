@@ -213,6 +213,28 @@ class PlaneacionController extends Controller
 
     public function destroy(Planeacion $planeacion)
     {
-        //
+        DB::transaction(function () use ($planeacion) {
+
+            // Obtener documentos relacionados
+            $documentos = $planeacion->documents;
+
+            foreach ($documentos as $doc) {
+
+                // 1️⃣ Eliminar archivo físico si existe
+                if ($doc->ruta && Storage::disk('public')->exists($doc->ruta)) {
+                    Storage::disk('public')->delete($doc->ruta);
+                }
+
+                // 2️⃣ Eliminar registro del documento
+                $doc->delete();
+            }
+
+            // 3️⃣ Finalmente eliminar la planeación
+            $planeacion->delete();
+        });
+
+        return to_route('planeaciones.index')
+            ->with('success', 'La planeación y sus documentos fueron eliminados correctamente.');
+
     }
 }
