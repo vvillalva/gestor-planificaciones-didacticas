@@ -93,7 +93,7 @@ export default function ViewDataPlaneacion({ planeacion }: ViewDataPlaneacionPro
                                             <DropdownMenuItem
                                                 className="cursor-pointer"
                                                 onClick={() =>
-                                                    window.open(`/${doc.ruta}`, "_blank")
+                                                    window.open(`/ver-documento/${doc.ruta}`, "_blank")
                                                 }
                                             >
                                                 Ver

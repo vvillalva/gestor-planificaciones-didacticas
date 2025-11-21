@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class PlaneacionController extends Controller
@@ -67,27 +68,32 @@ class PlaneacionController extends Controller
             'usuario_id' => Auth::id(),
         ]);
 
-        // 2️⃣ Guardar archivo en /public/planeaciones-documentos
+        // 2️⃣ Guardar archivo usando Storage (mejor práctica)
         if ($request->hasFile('planeacion_archivo')) {
 
+            // Crea carpeta si no existe
+            Storage::disk('public')->makeDirectory('planeaciones-documentos');
+
             $file = $request->file('planeacion_archivo');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $destination = public_path('planeaciones-documentos');
 
-            // Crear la carpeta si no existe
-            if (!is_dir($destination)) {
-                mkdir($destination, 0775, true);
-            }
+            // Nombre limpio y único
+            $fullName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                . '.' . $file->getClientOriginalExtension();
 
-            $file->move($destination, $fileName);
+            // Guarda en storage/app/public/planeaciones-documentos
+            $path = $file->storeAs(
+                'planeaciones-documentos',  // carpeta dentro del disco "public"
+                $fullName,
+                'public'
+            );
 
-            // 3️⃣ Crear registro en documents
+            // Registrar documento en la BD
             Documento::create([
                 'planeacion_id' => $planeacion->id,
                 'usuario_id' => Auth::id(),
                 'nombre' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
                 'tipo' => $file->getClientOriginalExtension(),
-                'ruta' => 'planeaciones-documentos/' . $fileName,
+                'ruta' => $path, // Ej: planeaciones-documentos/12345_archivo.pdf
             ]);
         }
 
