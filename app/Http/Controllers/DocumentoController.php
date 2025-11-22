@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Documento;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DocumentoController extends Controller
 {
@@ -12,7 +13,10 @@ class DocumentoController extends Controller
      */
     public function index()
     {
-        //
+        $documentos = Documento::with('planeacion')->get();
+        return Inertia::render('documentos/lista-documentos', [
+            'documentos' => $documentos,
+        ]);
     }
 
     /**

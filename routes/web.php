@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\PlaneacionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
@@ -27,6 +28,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('usuarios', UsuarioController::class)->names('usuarios');
     Route::resource('planeaciones', PlaneacionController::class)->names('planeaciones')->parameters([
         'planeaciones' => 'planeacion'
+    ]);
+    Route::resource('documentos', DocumentoController::class)->names('documentos')->parameters([
+        'documentos' => 'documento'
     ]);
 });
 

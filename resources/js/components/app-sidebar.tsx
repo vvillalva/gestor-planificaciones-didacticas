@@ -19,7 +19,7 @@ const mainNavItems: NavItem[] = [
         icon: BookOpen,
     },
     {
-        title: 'Expedientes',
+        title: 'Documentos',
         href: '/documentos',
         icon: SquareLibrary,
     },

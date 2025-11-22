@@ -2,7 +2,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 // import { useCan } from '@/hooks/useCan';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, CircleCheck, EllipsisVertical, Loader, LoaderCircle, Pencil, Trash2 } from 'lucide-react';
+import { ArrowUpDown, CircleCheck, EllipsisVertical, Loader, LoaderCircle, Pencil, Trash2, File, FileDown } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -268,7 +268,7 @@ export const columnasRoles: ColumnDef<ColumnaRol>[] = [
 ];
 
 //** Configuración de Tabla Planeaciones */
-type RowDataPlaneacion = { 
+type RowDataPlaneacion = {
     id: number;
     titulo: string;
     descripcion: string;
@@ -431,5 +431,172 @@ export const columnasPlaneaciones: ColumnDef<ColumnaPlaneacion>[] = [
     {
         id: 'actions',
         cell: ({ row }) => <ActionsCellPlaneacion row={row} />,
+    },
+];
+
+//** Configuración de Tabla Documentos */
+export type ColumnaDocumentos = {
+    id: number;
+    nombre: string;
+    planeacion: {
+        titulo: string;
+        grado: string;
+        grupo: string;
+    }
+    ruta: string;
+    created_at: string;
+};
+
+function ActionsCellDocumento({ row }: { row: { original: ColumnaDocumentos } }) {
+    const filePath = row.original.ruta;
+    const [menuOpen, setMenuOpen] = useState(false);
+    // const { onDeleteClick } = useDeleteAlert('usuarios.destroy');
+    // const { has, hasAny } = useCan();
+    return (
+        <>
+            <div className="flex flex-row justify-end">
+                <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
+                            <EllipsisVertical />
+                            <span className="sr-only">Opciones</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-32">
+                        <DropdownMenuItem className="cursor-pointer" onClick={() => window.open(`/ver-documento/${filePath}`, '_blank')}>
+                            <File /> Ver PDF
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = `/ver-documento/${filePath}`;
+                                link.download = filePath.split('/').pop() || 'documento.pdf';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                            }}
+                        >
+                            <FileDown /> Descargar
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        </>
+    );
+}
+
+export const columnasDocumento: ColumnDef<ColumnaDocumentos>[] = [
+    {
+        accessorKey: 'id',
+        header: ({ column }) => {
+            return (
+                <div className="w-20">
+                    <Button className="flex" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Identificador
+                        <ArrowUpDown />
+                    </Button>
+                </div>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="pl-3 lowercase">
+                <span>{row.getValue('id')}</span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'nombre',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Nombre del Documento
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>
+                    {row.original.nombre}
+                </span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'planeacionTitulo',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Planeacion
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>{row.original.planeacion.titulo}</span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'planeacionGrado',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Grado
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>{row.original.planeacion.grado}</span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'planeacionGrupo',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Grupo
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>{row.original.planeacion.grupo}</span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'created_at',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Fecha de registro
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>
+                    {new Date(row.getValue('created_at')).toLocaleString('es-MX', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    })}
+                </span>
+            </div>
+        ),
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <ActionsCellDocumento row={row} />,
     },
 ];
