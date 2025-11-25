@@ -29,6 +29,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('planeaciones', PlaneacionController::class)->names('planeaciones')->parameters([
         'planeaciones' => 'planeacion'
     ]);
+    Route::get('/planeaciones/{planeacion}/aprobar', [PlaneacionController::class, 'aprobar'])
+        ->name('planeaciones.aprobar');
+
+    Route::put('/planeaciones/{planeacion}/aprobar', [PlaneacionController::class, 'aprobarPlaneacion'])
+    ->name('planeaciones.aprobarPlaneacion');
+    
     Route::resource('documentos', DocumentoController::class)->names('documentos')->parameters([
         'documentos' => 'documento'
     ]);

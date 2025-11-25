@@ -2,7 +2,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 // import { useCan } from '@/hooks/useCan';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, CircleCheck, EllipsisVertical, Loader, LoaderCircle, Pencil, Trash2, File, FileDown } from 'lucide-react';
+import { ArrowUpDown, CircleCheck, EllipsisVertical, Loader, LoaderCircle, Pencil, Trash2, File, FileDown, Check, X } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -302,6 +302,11 @@ function ActionsCellPlaneacion({ row }: { row: { original: RowDataPlaneacion } }
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-32">
                         <DropdownMenuItem>
+                            <Link href={route('planeaciones.aprobar', row.original.id)} className="flex w-full flex-row items-center gap-1">
+                                <Check /> Aprobación
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
                             <Link href={route('planeaciones.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
                                 <Pencil /> Editar
                             </Link>
@@ -383,17 +388,17 @@ export const columnasPlaneaciones: ColumnDef<ColumnaPlaneacion>[] = [
             let text = null;
             let badgeClass = 'text-muted-foreground px-1.5';
 
-            if (estatus === 'atendido') {
+            if (estatus === 'aprobado') {
                 icon = <CircleCheck className="fill-green-600 text-green-300 dark:fill-green-700" />;
-                text = <p className="text-green-700 dark:text-green-500">Atendido</p>;
+                text = <p className="text-green-700 dark:text-green-500">Aprobado</p>;
                 badgeClass += ' border-green-600 bg-status-card'; // Puedes agregar más clases
-            } else if (estatus === 'en-proceso') {
-                icon = <LoaderCircle className="animate-spin text-yellow-500" />;
-                text = <p className="text-yellow-500">En Proceso</p>;
-                badgeClass += ' border-yellow-500 text-yellow-600 bg-status-card';
+            } else if (estatus === 'rechazado') {
+                icon = <X className=" text-red-500" />;
+                text = <p className="text-red-500">Rechazado</p>;
+                badgeClass += ' border-red-500 text-red-600 bg-status-card';
             } else {
                 icon = <Loader />;
-                text = <p>En Espera</p>;
+                text = <p>En Proceso</p>;
                 badgeClass += ' border-neutral-500 bg-status-card';
             }
 

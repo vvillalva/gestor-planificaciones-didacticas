@@ -237,4 +237,38 @@ class PlaneacionController extends Controller
             ->with('success', 'La planeación y sus documentos fueron eliminados correctamente.');
 
     }
+
+    public function aprobar(int $id)
+    {
+        $planeacion = Planeacion::with([
+            'documents',
+        ])->findOrFail($id);
+        // $planeacion = Planeacion::find($id);
+        return Inertia::render("planeaciones/aprobar-planeacion", [
+            'planeacion' => $planeacion,
+        ]);
+    }
+
+    public function aprobarPlaneacion(Request $request, Planeacion $planeacion)
+    {
+        $validated = $request->validate([
+            'estatus' => [
+                'required',
+                'string',
+                'in:en_revision,rechazado,aprobado',
+            ],
+        ], [
+            'estatus.required' => 'Debes seleccionar un estatus.',
+            'estatus.in' => 'El estatus seleccionado no es válido.',
+        ]);
+
+        // 🔹 Actualizar la planeación
+        $planeacion->update([
+            'estatus' => $validated['estatus'],
+        ]);
+
+        // 🔹 Redirigir con mensaje
+        return to_route('planeaciones.index')
+            ->with('success', 'La planeación ha sido aprobada/actualizada correctamente.');
+    }
 }
