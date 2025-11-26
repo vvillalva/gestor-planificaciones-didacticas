@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\PlaneacionController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use Inertia\Inertia;
@@ -38,6 +39,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('documentos', DocumentoController::class)->names('documentos')->parameters([
         'documentos' => 'documento'
     ]);
+
+    Route::resource('roles' , RoleController::class)->names('roles');
+
 });
 
 require __DIR__ . '/settings.php';

@@ -24,8 +24,11 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/agregar-usuarios',
     },
 ];
-
-export default function AddUser({ roles=[] }: { roles:[] }) {
+interface RolProps{
+    id: number;
+    name: string;
+}
+export default function AddUser({ roles=[] }: { roles:RolProps[] }) {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -35,7 +38,7 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
         correo: '',
         password: '',
         confirm_password: '',
-        rol: 'Administrador',
+        rol: '',
     });
 
     const createUser: FormEventHandler = (e) => {
@@ -221,7 +224,7 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                             </div>
                         </div>
                     </div>
-                    {/* <div className="rol flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                    <div className="rol flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                         <div className="w-full lg:w-[300px]">
                             <Label id="rol" className="font-medium">
                                 Rol
@@ -248,7 +251,7 @@ export default function AddUser({ roles=[] }: { roles:[] }) {
                                 )}
                             </div>
                         </div>
-                    </div> */}
+                    </div>
                     <Separator />
                     <div className="flex flex-row justify-end">
                         <Button disabled={processing} type="submit" className="w-full md:w-[140px]">

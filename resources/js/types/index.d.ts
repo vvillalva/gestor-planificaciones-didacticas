@@ -1,6 +1,68 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
 
+// PERMISSIONS SYSTEM – Typed
+
+export const ACTIONS = [
+    "ver",
+    "crear",
+    "editar",
+    "eliminar",
+    "aprobar",
+    "subir",
+] as const;
+export type Action = typeof ACTIONS[number];
+
+export const DOMAINS = [
+    "usuario",
+    "planeacion",
+    "documento",
+    "roles",
+    "graficas",
+    "graficasAdmin",
+] as const;
+export type Domain = typeof DOMAINS[number];
+
+export type Permission = `${Action}.${Domain}`;
+
+// Tus permisos estrictamente tipados
+export const PERMISSIONS: Permission[] = [
+    "ver.usuario",
+    "crear.usuario",
+    "editar.usuario",
+    "eliminar.usuario",
+
+    "ver.planeacion",
+    "crear.planeacion",
+    "editar.planeacion",
+    "eliminar.planeacion",
+    "aprobar.planeacion",
+
+    "ver.documento",
+    "subir.documento",
+    "eliminar.documento",
+
+    "ver.roles",
+    "crear.roles",
+    "editar.roles",
+    "eliminar.roles",
+
+    "ver.graficas",
+    "ver.graficasAdmin",
+];
+
+// Para formularios (crear/editar roles)
+export interface RoleForm {
+    name: string;
+    permissions: Permission[];
+}
+
+type RoleFormData = {
+    id: number;
+    name: string;
+    permissions: Permission[]; // <<— importante: string[]
+};
+
 export interface Auth {
     user: User;
 }

@@ -34,8 +34,12 @@ interface Usuario {
     password: string;
     rol: string;
 }
+interface RolProps{
+    id: number;
+    name: string;
+}
 
-export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, roles:[] }) {
+export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, roles:RolProps[] }) {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -235,7 +239,7 @@ export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, 
                                 Rol
                             </Label>
                         </div>
-                        {/* <div className="flex w-full flex-col gap-4 lg:w-[405px]">
+                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
                             <div className="flex flex-col gap-2">
                                 <Select value={data.rol} onValueChange={(value) => setData('rol', value)}>
                                     <SelectTrigger className="w-full">
@@ -255,7 +259,7 @@ export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, 
                                     <Label className="text-muted-foreground text-sm font-normal"></Label>
                                 )}
                             </div>
-                        </div> */}
+                        </div>
                     </div>
                     <Separator />
                     <div className="flex flex-row justify-end">

@@ -18,7 +18,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ListaDocumentos({ documentos = [] }: { documentos: [] }) {
-    console.log(documentos);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Documentos" />

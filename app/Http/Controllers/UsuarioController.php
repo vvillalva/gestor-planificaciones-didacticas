@@ -29,6 +29,7 @@ class UsuarioController extends Controller
     public function create()
     {
         return Inertia::render('usuarios/nuevo-usuarios',[
+            'roles' => Role::all(),
         ]);
     }
 
@@ -89,6 +90,7 @@ class UsuarioController extends Controller
         $user = User::find($id);
         return Inertia::render("usuarios/editar-usuarios", [
             'usuario' => $user,
+            "roles" => Role::all(), //Agregamos esto
         ]);
     }
 
