@@ -69,7 +69,7 @@ class UsuarioController extends Controller
             ['password' => Hash::make($request->password)]
         );
 
-        //$user->syncRoles([$request->rol]);
+        $user->syncRoles([$request->rol]);
 
         return to_route('usuarios.index');
     }
@@ -150,7 +150,7 @@ class UsuarioController extends Controller
             ['password' => Hash::make($request->password)]
         );
 
-        //$user->syncRoles([$request->rol]);
+        $user->syncRoles([$request->rol]);
 
         return to_route('usuarios.index');
     }

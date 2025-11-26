@@ -8,6 +8,7 @@ import Encabezado from '@/components/encabezado';
 import { Users } from 'lucide-react';
 import { DataTable } from '@/components/datatable/datatable';
 import { columnasUsuario } from '@/components/datatable/column';
+import { useCan } from '@/hooks/useCan';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,6 +18,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ListUsers({ usuarios = [] }: { usuarios: [] }) {
+    const { hasAny } = useCan();
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Usuarios" />
@@ -34,6 +37,15 @@ export default function ListUsers({ usuarios = [] }: { usuarios: [] }) {
                     placeholderFilter="Buscar por nombre..."
                     filter="name"
                 />
+                {hasAny(['crear.usuario']) ? (
+                    <>
+                        <div>si puede ver casos</div>
+                    </>
+                ) : (
+                    <>
+                        <div>no puede verlos</div>
+                    </>
+                )}
             </div>
         </AppLayout>
     );
