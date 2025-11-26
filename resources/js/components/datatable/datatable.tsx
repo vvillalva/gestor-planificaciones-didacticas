@@ -18,6 +18,7 @@ import { Input } from '../ui/input';
 
 import Encabezado from '../encabezado';
 import { Pagination } from './pagination';
+import { useCan } from '@/hooks/useCan';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -50,7 +51,7 @@ export function DataTable<TData, TValue>({
     classNameTable = '',
     className = '',
 }: DataTableProps<TData, TValue>) {
-    //const { hasAny } = useCan();
+    const { hasAny } = useCan();
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -86,13 +87,17 @@ export function DataTable<TData, TValue>({
                         onChange={(event) => table.getColumn(`${filter}`)?.setFilterValue(event.target.value)}
                         className="max-w-sm"
                     />
-                    {resourceName && (
-                        <Link
-                            href={route(`${resourceName}.create`)}
-                            className="bg-accent-foreground dark:bg-accent text-primary-foreground hover:bg-secondary-sggym-700/90 flex flex-row items-center gap-1 rounded px-3 py-1 text-sm shadow-xs"
-                        >
-                            <Plus size={16} /> {labelButton}
-                        </Link>
+                    {hasAny(['crear.usuario', 'crear.roles', 'crear.planeacion']) && (
+                        <>
+                            {resourceName && (
+                                <Link
+                                    href={route(`${resourceName}.create`)}
+                                    className="flex flex-row items-center gap-1 rounded bg-primary px-3 py-1 text-primary-foreground shadow-xs hover:bg-primary/90"
+                                >
+                                    <Plus size={16} /> {labelButton}
+                                </Link>
+                            )}
+                        </>
                     )}
                 </div>
             )}

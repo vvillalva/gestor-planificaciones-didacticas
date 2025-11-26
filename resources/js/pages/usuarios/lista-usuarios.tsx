@@ -9,6 +9,7 @@ import { Users } from 'lucide-react';
 import { DataTable } from '@/components/datatable/datatable';
 import { columnasUsuario } from '@/components/datatable/column';
 import { useCan } from '@/hooks/useCan';
+import { ConfirmProvider } from '@/providers/ConfirmProvider';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,8 +19,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ListUsers({ usuarios = [] }: { usuarios: [] }) {
-    const { hasAny } = useCan();
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Usuarios" />
@@ -29,23 +28,16 @@ export default function ListUsers({ usuarios = [] }: { usuarios: [] }) {
                     description="Revisa los diferentes usuarios registrados dentro del sistema."
                     icon={<Users className="h-[20px] w-[20px]" />}
                 />
-                <DataTable
-                    columns={columnasUsuario}
-                    data={usuarios}
-                    resourceName="usuarios"
-                    labelButton="Nuevo usuario"
-                    placeholderFilter="Buscar por nombre..."
-                    filter="name"
-                />
-                {hasAny(['crear.usuario']) ? (
-                    <>
-                        <div>si puede ver casos</div>
-                    </>
-                ) : (
-                    <>
-                        <div>no puede verlos</div>
-                    </>
-                )}
+                <ConfirmProvider>
+                    <DataTable
+                        columns={columnasUsuario}
+                        data={usuarios}
+                        resourceName="usuarios"
+                        labelButton="Nuevo usuario"
+                        placeholderFilter="Buscar por nombre..."
+                        filter="name"
+                    />
+                </ConfirmProvider>  
             </div>
         </AppLayout>
     );

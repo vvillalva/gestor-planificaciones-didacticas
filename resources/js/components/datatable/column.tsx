@@ -9,6 +9,7 @@ import { Button } from '../ui/button';
 import ViewDataPlaneacion from '../ui/view-data-planeacion';
 import { Documento } from '@/types';
 import { useDeleteAlert } from '@/hooks/useDeleteAlert';
+import { useCan } from '@/hooks/useCan';
 
 type RowData = { id: number };
 
@@ -24,34 +25,49 @@ export type ColumnaUsuario = {
 
 function ActionsCellUsuario({ row }: { row: { original: RowData } }) {
     const [menuOpen, setMenuOpen] = useState(false);
-    // const { onDeleteClick } = useDeleteAlert('usuarios.destroy');
-    // const { has, hasAny } = useCan();
+    const { onDeleteClick } = useDeleteAlert('usuarios.destroy');
+    const { has, hasAny } = useCan();
     return (
         <>
-            <div className="flex flex-row justify-end">
-                <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
-                            <EllipsisVertical />
-                            <span className="sr-only">Opciones</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-32">
-                        <DropdownMenuItem>
-                            <Link href={route('usuarios.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
-                                <Pencil /> Editar
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem variant="destructive">
-                            <Trash2 />
-                            Borrar
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+            {hasAny(['editar.usuario', 'eliminar.usuario']) && (
+                <div className="flex flex-row justify-end">
+                    <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
+                                <EllipsisVertical />
+                                <span className="sr-only">Opciones</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-32">
+                            {has('editar.usuario') && 
+                                <DropdownMenuItem>
+                                    <Link href={route('usuarios.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
+                                        <Pencil /> Editar
+                                    </Link>
+                                </DropdownMenuItem>
+                            }
+                            {has('eliminar.usuario') &&
+                                <DropdownMenuItem variant="destructive"
+                                    onSelect={async (e) => {
+                                        e.preventDefault();
+                                        // 1. cerramos el menú
+                                        setMenuOpen(false);
+                                        // 2. esperamos un frame para que cierre sin congelar
+                                        await new Promise((r) => requestAnimationFrame(r));
+                                        // 3. ejecutamos la eliminación
+                                        onDeleteClick(row.original.id);
+                                    }}>
+                                    <Trash2 />
+                                    Borrar
+                                </DropdownMenuItem>
+                            }
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )}
         </>
     );
-}
+};
 
 export const columnasUsuario: ColumnDef<ColumnaUsuario>[] = [
     {
@@ -166,39 +182,49 @@ export type ColumnaRol = {
 
 function ActionsCellRoles({ row }: { row: { original: RowData } }) {
     const [menuOpen, setMenuOpen] = useState(false);
-    // const { onDeleteClick } = useDeleteAlert('roles.destroy');
-    // const { has, hasAny } = useCan();
+    const { onDeleteClick } = useDeleteAlert('roles.destroy');
+    const { has, hasAny } = useCan();
     return (
         <>
-            <div className="flex flex-row justify-end">
-                <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
-                            <EllipsisVertical />
-                            <span className="sr-only">Opciones</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-32">
-                        {/* <DropdownMenuItem>
-                            <Link href={route('usuarios.show', row.original.id)} className="flex w-full flex-row items-center gap-1">
-                                <FileText /> Ver detalles
-                            </Link>
-                        </DropdownMenuItem> */}
-                        <DropdownMenuItem>
-                            <Link href={route('roles.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
-                                <Pencil /> Editar
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem variant="destructive">
-                            <Trash2 />
-                            Borrar
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+            {hasAny(['editar.rol', 'eliminar.rol']) && (
+                <div className="flex flex-row justify-end">
+                    <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
+                                <EllipsisVertical />
+                                <span className="sr-only">Opciones</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-32">
+                            {has('editar.rol') &&
+                                <DropdownMenuItem>
+                                    <Link href={route('roles.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
+                                        <Pencil /> Editar
+                                    </Link>
+                                </DropdownMenuItem>
+                            }
+                            {has('eliminar.rol') &&
+                                <DropdownMenuItem variant="destructive"
+                                onSelect={async (e) => {
+                                        e.preventDefault();
+                                        // 1. cerramos el menú
+                                        setMenuOpen(false);
+                                        // 2. esperamos un frame para que cierre sin congelar
+                                        await new Promise((r) => requestAnimationFrame(r));
+                                        // 3. ejecutamos la eliminación
+                                        onDeleteClick(row.original.id);
+                                    }}>
+                                    <Trash2 />
+                                    Borrar
+                                </DropdownMenuItem>
+                            }
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )}
         </>
     );
-}
+};
 
 export const columnasRoles: ColumnDef<ColumnaRol>[] = [
     {
@@ -288,49 +314,59 @@ export type ColumnaPlaneacion = {
 function ActionsCellPlaneacion({ row }: { row: { original: RowDataPlaneacion } }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const { onDeleteClick } = useDeleteAlert('planeaciones.destroy');
-    // const { has, hasAny } = useCan();
+    const { has, hasAny } = useCan();
     return (
         <>
-            <div className="flex flex-row justify-end">
-                <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
-                            <EllipsisVertical />
-                            <span className="sr-only">Opciones</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-32">
-                        <DropdownMenuItem>
-                            <Link href={route('planeaciones.aprobar', row.original.id)} className="flex w-full flex-row items-center gap-1">
-                                <Check /> Aprobación
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <Link href={route('planeaciones.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
-                                <Pencil /> Editar
-                            </Link>
-                        </DropdownMenuItem>
-                        <ViewDataPlaneacion planeacion={row.original} />
-                        <DropdownMenuItem
-                            variant="destructive"
-                            onSelect={async (e) => {
-                                e.preventDefault();
-                                // 1. cerramos el menú
-                                setMenuOpen(false);
-                                // 2. esperamos un frame para que cierre sin congelar
-                                await new Promise((r) => requestAnimationFrame(r));
-                                // 3. ejecutamos la eliminación
-                                onDeleteClick(row.original.id);
-                            }}>
-                            <Trash2 />
-                            Borrar
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+            {hasAny(['aprobar.planeacion', 'editar.planeacion', 'eliminar.planeacion', 'ver.planeacion']) && (
+                <div className="flex flex-row justify-end">
+                    <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
+                                <EllipsisVertical />
+                                <span className="sr-only">Opciones</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-32">
+                            {has('aprobar.planeacion') &&
+                                <DropdownMenuItem>
+                                    <Link href={route('planeaciones.aprobar', row.original.id)} className="flex w-full flex-row items-center gap-1">
+                                        <Check /> Aprobación
+                                    </Link>
+                                </DropdownMenuItem>
+                            }
+                            {has('editar.planeacion') &&
+                                <DropdownMenuItem>
+                                    <Link href={route('planeaciones.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
+                                        <Pencil /> Editar
+                                    </Link>
+                                </DropdownMenuItem>
+                            }
+                            {has('ver.planeacion') &&
+                                <ViewDataPlaneacion planeacion={row.original} />
+                            }
+                            {has('eliminar.planeacion') &&
+                                <DropdownMenuItem
+                                    variant="destructive"
+                                    onSelect={async (e) => {
+                                        e.preventDefault();
+                                        // 1. cerramos el menú
+                                        setMenuOpen(false);
+                                        // 2. esperamos un frame para que cierre sin congelar
+                                        await new Promise((r) => requestAnimationFrame(r));
+                                        // 3. ejecutamos la eliminación
+                                        onDeleteClick(row.original.id);
+                                    }}>
+                                    <Trash2 />
+                                    Borrar
+                                </DropdownMenuItem>
+                            }
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )}
         </>
     );
-}
+};
 
 export const columnasPlaneaciones: ColumnDef<ColumnaPlaneacion>[] = [
     {
@@ -455,9 +491,10 @@ function ActionsCellDocumento({ row }: { row: { original: ColumnaDocumentos } })
     const filePath = row.original.ruta;
     const [menuOpen, setMenuOpen] = useState(false);
     // const { onDeleteClick } = useDeleteAlert('usuarios.destroy');
-    // const { has, hasAny } = useCan();
+    const { has, hasAny } = useCan();
     return (
         <>
+        {hasAny(['ver.documento', 'descargar.documento']) && (
             <div className="flex flex-row justify-end">
                 <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
                     <DropdownMenuTrigger asChild>
@@ -486,9 +523,10 @@ function ActionsCellDocumento({ row }: { row: { original: ColumnaDocumentos } })
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+        )}
         </>
     );
-}
+};
 
 export const columnasDocumento: ColumnDef<ColumnaDocumentos>[] = [
     {
