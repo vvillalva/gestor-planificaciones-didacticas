@@ -287,7 +287,6 @@ export type ColumnaPlaneacion = {
 
 function ActionsCellPlaneacion({ row }: { row: { original: RowDataPlaneacion } }) {
     const [menuOpen, setMenuOpen] = useState(false);
-    console.log(row.original);
     const { onDeleteClick } = useDeleteAlert('planeaciones.destroy');
     // const { has, hasAny } = useCan();
     return (

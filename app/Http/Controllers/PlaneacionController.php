@@ -16,16 +16,19 @@ class PlaneacionController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // Si el usuario es administrador, ve todos los casos
-        // if ($user->hasRole('Director') || $user->hasRole('Administrador')) {
-        //     $cases = Planeacion::with('victim_id')->get();
-        // } else {
-        //     // Si no es admin, solo ve los casos que él registró
-        //     $cases = Planeacion::with('victim_id')
-        //         ->where('user_id' , $user->id) // o 'user_id' según tu campo
-        //         ->get();
-        // }
-        $planeaciones = Planeacion::with('documents')->get();
+
+        // Query base con todas las relaciones
+        $query = Planeacion::with(['usuario:id,nombre', 'documents'])
+            ->orderBy('created_at', 'desc');
+
+        // Si NO es administrador, filtrar por usuario
+        if (!$user->hasRole('Administrador')) {
+            $query->where('usuario_id', $user->id);
+        }
+
+        // Ejecutar query
+        $planeaciones = $query->get();
+
         return Inertia::render('planeaciones/lista-planeaciones', [
             'planeaciones' => $planeaciones
         ]);
