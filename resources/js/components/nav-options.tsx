@@ -8,12 +8,12 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import type { NavItem, SubNavItem } from '@/types';
+import type { SubNavItem,  NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 
-export function NavMain({ items = [] }: { items: NavItem[] }) {
+export function NavOpciones({ items = [], titulo }: { items: NavItem[]; titulo: string }) {
     // 1) Trae permisos desde Inertia de forma segura
     const { auth } = usePage().props as unknown as { auth: { permissions: string[] } };
     const perms = new Set(auth?.permissions ?? []);
@@ -51,10 +51,9 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
     };
 
     const visible = filterNav(items);
-
     return (
-        <SidebarGroup>
-            <SidebarGroupLabel>Acciones</SidebarGroupLabel>
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+            <SidebarGroupLabel>{titulo}</SidebarGroupLabel>
             <SidebarMenu>
                 {visible.map((item) =>
                     item.subitems && item.subitems.length > 0 ? (

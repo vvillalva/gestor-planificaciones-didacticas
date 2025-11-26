@@ -80,6 +80,16 @@ export interface NavGroup {
 export interface NavItem {
     title: string;
     href: string;
+    permission?: string;
+    icon?: LucideIcon | null;
+    isActive?: boolean;
+    subitems?: NavItem[];
+}
+
+export interface SubNavItem {
+    title: string;
+    href: string;
+    permission?: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
 }
