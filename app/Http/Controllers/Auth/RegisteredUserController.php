@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -20,7 +21,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('auth/register');
+        return Inertia::render('auth/register', [
+            'roles' => Role::all(),
+        ]);
     }
 
     /**
@@ -45,6 +48,8 @@ class RegisteredUserController extends Controller
             'correo' => $request->correo,
             'password' => Hash::make($request->password),
         ]);
+        
+        $user->syncRoles([$request->rol]);
 
         event(new Registered($user));
 

@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
@@ -77,6 +77,15 @@ export default function Login({ status }: LoginProps) {
                 </div>
 
             </form>
+            <div className='flex justify-center mt-4 text-sm gap-2'>
+                <span>¿Aun no tienes cuenta? </span>
+                <Link
+                    href={route('register')}
+                    className="underline underline-offset-4"
+                >
+                    Regístrate
+                </Link>
+            </div>
             {status && <div className="mb-4 text-center text-sm font-medium text-neutral-800">{status}</div>}
         </AuthLayout>
     );

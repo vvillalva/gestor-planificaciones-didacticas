@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Shield, SquareLibrary, Users } from 'lucide-react';
+import { BookOpen, Calendar, Folder, LayoutGrid, Shield, SquareLibrary, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 import { NavOpciones } from './nav-options';
 import { useCan } from '@/hooks/useCan';
@@ -42,6 +42,13 @@ const adminNavItems: NavItem[] = [
         permission: 'ver.roles',
     },
 ];
+const docenteNavItems: NavItem[] = [
+    {
+        title: 'Horarios',
+        href: '/horarios',
+        icon: Calendar,
+    },
+];
 
 export function AppSidebar() {
     const { hasAny, has } = useCan();
@@ -61,6 +68,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
+                <NavOpciones items={docenteNavItems} titulo="Director" />
                 { hasAny(['ver.usuario', 'ver.roles']) && <NavOpciones items={adminNavItems} titulo="Administrador" /> }
             </SidebarContent>
 

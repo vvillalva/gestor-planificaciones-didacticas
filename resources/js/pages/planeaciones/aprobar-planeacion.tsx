@@ -28,6 +28,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface Usuario {
+    id: number;
+    nombre: string;
+    apellido: string;
+}
 interface Planeacion {
     id: number;
     titulo: string;
@@ -36,9 +41,11 @@ interface Planeacion {
     grado: string;
     grupo: string;
     documents: Documento;
+    usuario: Usuario;
 }
 
 export default function AprobarPlaneacion({ planeacion }: { planeacion: Planeacion }) {
+    console.log(planeacion);
     const { data, setData, put, processing, errors } = useForm({
         estatus: planeacion.estatus,
     });
@@ -115,6 +122,24 @@ export default function AprobarPlaneacion({ planeacion }: { planeacion: Planeaci
                                     value={planeacion.titulo}
                                     readOnly
                                     placeholder="e.j. Planeación..."
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="docente flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                        <div className="w-full lg:w-[300px]">
+                            <Label id="docente" className="font-medium">
+                                Nombre docente
+                            </Label>
+                        </div>
+                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
+                            <div className="flex flex-col gap-2">
+                                <Input
+                                    id="nombre"
+                                    type="text"
+                                    value={planeacion.usuario.nombre + ' ' + planeacion.usuario.apellido}
+                                    readOnly
+                                    placeholder="e.j. Juan Pérez"
                                 />
                             </div>
                         </div>
