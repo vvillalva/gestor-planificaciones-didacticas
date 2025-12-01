@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type RegisterForm = {
     nombre: string;
@@ -16,8 +17,12 @@ type RegisterForm = {
     rol: string;
     password_confirmation: string;
 };
+interface RolProps{
+    id: number;
+    name: string;
+}
 
-export default function Register() {
+export default function Register({ roles=[] }: { roles:RolProps[] }) {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     
@@ -26,7 +31,7 @@ export default function Register() {
         apellido: '',
         correo: '',
         password: '',
-        rol: 'Administrador',
+        rol: '',
         password_confirmation: '',
     });
 
@@ -158,6 +163,35 @@ export default function Register() {
                             </Button>
                         </div>
                         <InputError message={errors.password_confirmation} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <div className="w-full">
+                            <Label id="rol" className="font-medium">
+                                Rol
+                            </Label>
+                        </div>
+                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
+                            <div className="flex flex-col gap-2">
+                                <Select value={data.rol} onValueChange={(value) => setData('rol', value)}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Selecciona" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {roles.map((rol) => (
+                                            <SelectItem key={rol.id} value={rol.name}>
+                                                {rol.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {errors.password ? (
+                                    <InputError message={errors.password} />
+                                ) : (
+                                    <Label className="text-muted-foreground text-sm font-normal"></Label>
+                                )}
+                            </div>
+                        </div>
                     </div>
 
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>

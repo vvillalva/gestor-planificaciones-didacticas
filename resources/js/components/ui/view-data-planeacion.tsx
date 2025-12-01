@@ -15,12 +15,19 @@ import { Documento } from "@/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 import { formatDate } from "@/hooks/use-time";
 
+interface Usuario {
+    id: number;
+    nombre: string;
+    apellido: string;
+}
+
 interface PlaneacionProps {
     titulo?: string;
     grado?: string;
     grupo?: string;
     descripcion?: string;
     documents?: Documento;
+    usuario: Usuario;
 }
 
 interface ViewDataPlaneacionProps {
@@ -44,6 +51,10 @@ export default function ViewDataPlaneacion({ planeacion }: ViewDataPlaneacionPro
             <div className="flex flex-col">
                 <Label className="text-neutral-600">Titulo</Label>
                 <p className="font-medium text-[20px]">{planeacion?.titulo || 'No hay datos disponibles.'}</p>
+            </div>
+            <div className="flex flex-col">
+                <Label className="text-neutral-600">Docente</Label>
+                <p className="font-medium text-[20px]">{planeacion?.usuario.nombre + ' ' + planeacion?.usuario.apellido || 'No hay datos disponibles.'}</p>
             </div>
             <div className="flex flex-col">
                 <Label className="text-neutral-600">Grado</Label>

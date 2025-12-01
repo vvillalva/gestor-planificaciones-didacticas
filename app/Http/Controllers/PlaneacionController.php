@@ -245,8 +245,8 @@ class PlaneacionController extends Controller
     {
         $planeacion = Planeacion::with([
             'documents',
+            'usuario',
         ])->findOrFail($id);
-        // $planeacion = Planeacion::find($id);
         return Inertia::render("planeaciones/aprobar-planeacion", [
             'planeacion' => $planeacion,
         ]);

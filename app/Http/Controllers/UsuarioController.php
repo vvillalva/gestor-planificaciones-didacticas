@@ -7,8 +7,6 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Bitacora;
-use Illuminate\Support\Facades\Auth;
 
 class UsuarioController extends Controller
 {
