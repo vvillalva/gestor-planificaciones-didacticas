@@ -13,26 +13,27 @@ import { ConfirmProvider } from '@/providers/ConfirmProvider';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Lista de Usuarios',
-        href: '/usuarios',
+        title: 'Lista de Horarios',
+        href: '/horarios',
     },
 ];
 
-export default function ListaHorarios({ usuarios = [] }: { usuarios: [] }) {
+export default function ListaHorarios({ docentes = [] }: { docentes: [] }) {
+    console.log(docentes);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Usuarios" />
+            <Head title="Horarios" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-8">
                 <Encabezado
-                    title="Usuarios"
-                    description="Revisa los diferentes usuarios registrados dentro del sistema."
+                    title="Horarios"
+                    description="Revisa y gestiona los horarios disponibles para los docentes en el sistema."
                     icon={<Users className="h-[20px] w-[20px]" />}
                 />
                 <ConfirmProvider>
                     <DataTable
                         columns={columnasUsuario}
-                        data={usuarios}
-                        resourceName="usuarios"
+                        data={docentes}
+                        resourceName="horarios"
                         labelButton="Nuevo usuario"
                         placeholderFilter="Buscar por nombre..."
                         filter="name"

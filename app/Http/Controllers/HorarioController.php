@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Horario;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class HorarioController extends Controller
 {
@@ -11,7 +14,15 @@ class HorarioController extends Controller
      */
     public function index()
     {
-        //
+        // Traemos solo los usuarios que son DOCENTES
+        $docentes = User::role('docente')
+            ->withCount('horarios')           // Cuenta los horarios del docente
+            ->with('horarios')                // Para verificar si tiene horarios
+            ->get();
+
+        return Inertia::render('horarios/lista-horarios', [
+            'docentes' => $docentes,
+        ]);
     }
 
     /**
@@ -19,7 +30,9 @@ class HorarioController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('horarios/nuevo-horario', [
+            'docentes' => User::role('Docente')->select('id', 'nombre')->get(),
+        ]);
     }
 
     /**
@@ -27,7 +40,29 @@ class HorarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // VALIDAR
+        $request->validate([
+            'usuario_id' => 'required|exists:users,id',
+            'horarios' => 'required|array|min:1',
+
+            'horarios.*.dia' => 'required|string',
+            'horarios.*.hora_inicio' => 'required|string',
+            'horarios.*.hora_fin' => 'required|string',
+            'horarios.*.materia' => 'required|string',
+        ]);
+
+        // GUARDAR CADA CELDA COMO UN HORARIO
+        foreach ($request->horarios as $h) {
+            Horario::create([
+                'usuario_id' => $request->usuario_id,
+                'dia' => $h['dia'],
+                'hora_inicio' => $h['hora_inicio'],
+                'hora_fin' => $h['hora_fin'],
+                'materia' => $h['materia'],
+            ]);
+        }
+
+        return to_route("horarios.index");
     }
 
     /**

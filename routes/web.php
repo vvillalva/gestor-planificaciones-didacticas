@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\PlaneacionController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -92,6 +93,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->names('roles')
         ->only(['show', 'index'])
         ->middleware('permission:ver.roles|crear.roles|editar.roles|eliminar.roles');
+
+    Route::resource('horarios', HorarioController::class)->names('horarios');
 
 });
 

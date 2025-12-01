@@ -4,11 +4,10 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { Card } from '@/components/ui/card';
-import { Home, FileText, FolderClosed, Users, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { FileText, FolderClosed, Users, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { DataTable } from '@/components/datatable/datatable';
 import { columnasPlaneaciones } from '@/components/datatable/column';
 import { ConfirmProvider } from '@/providers/ConfirmProvider';
-import { PlaneacionChart } from '@/components/graficas/chart-planeacion';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {

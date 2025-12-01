@@ -8,14 +8,20 @@ class Horario extends Model
 {
     protected $fillable = [
         'usuario_id',
-        'fecha',
+        'dia',
         'hora_inicio',
         'hora_fin',
-        'seleccionado',
+        'materia',
     ];
 
     public function usuario()
     {
         return $this->belongsTo(User::class, 'usuario_id');
+    }
+
+    // Relación con planeaciones (opcional)
+    public function planeaciones()
+    {
+        return $this->hasMany(Planeacion::class, 'horario_id');
     }
 }

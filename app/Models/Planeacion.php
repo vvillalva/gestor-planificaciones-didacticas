@@ -17,15 +17,21 @@ class Planeacion extends Model
         'grado',
         'grupo',
         'usuario_id',
+        'horario_id', 
     ];
 
     public function usuario()
     {
         return $this->belongsTo(User::class, 'usuario_id');
     }
-    
+
     public function documents()
     {
         return $this->hasMany(Documento::class, 'planeacion_id');
+    }
+
+    public function horario()
+    {
+        return $this->belongsTo(Horario::class, 'horario_id');
     }
 }
