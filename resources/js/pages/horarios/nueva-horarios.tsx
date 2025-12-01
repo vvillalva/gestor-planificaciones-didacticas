@@ -16,65 +16,38 @@ import Encabezado from '@/components/encabezado';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Lista de Usuarios',
+        title: 'Lista de Horarios',
         href: '/usuarios',
     },
     {
-        title: 'Editar Usuario',
-        href: '/editar-usuarios',
+        title: 'Nuevo Horario',
+        href: '/agregar-usuarios',
     },
 ];
 
-interface Usuario {
-    id: number;
-    nombre: string;
-    apellido: string;
-    correo: string;
-    password: string;
-    rol: string;
-}
-interface RolProps{
-    id: number;
-    name: string;
-}
-
-export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, roles:RolProps[] }) {
+export default function AddUser() {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const { data, setData, errors, put, processing } = useForm({
-        nombre: usuario.nombre,
-        apellido: usuario.apellido,
-        correo: usuario.correo,
-        password: usuario.password,
-        confirm_password: usuario.password,
-        rol: usuario.rol,
+    const { data, setData, errors, post, processing } = useForm({
+        nombre: '',
+        apellido: '',
+        correo: '',
+        password: '',
+        confirm_password: '',
+        rol: '',
     });
 
     const createUser: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('usuarios.update', usuario.id), {
-            onSuccess: () => {
-                console.log('Usuario creado correctamente');
-            },
-            onError: (errors) => {
-                console.error('Errores al crear usuario:', errors);
-            },
-            onFinish: () => {
-                console.log('Petición finalizada');
-            },
-        });
+        post(route('usuarios.store'));
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Editar usuario" />
+            <Head title="Crear usuario" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-8">
-                <Encabezado
-                    title="Editar Usuario"
-                    description="Revisa los diferentes usuarios registrados dentro del sistema."
-                    separator={true}
-                />
+                <Encabezado title="Nuevo Usuario" description="Revisa los diferentes usuarios registrados dentro del sistema." separator={true}/>
                 <form onSubmit={createUser} className="flex flex-col gap-10 pt-10">
                     <div className="nombre flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                         <div className="w-full lg:w-[300px]">
@@ -88,6 +61,7 @@ export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, 
                                     id="name"
                                     type="text"
                                     value={data.nombre}
+                                    required
                                     onChange={(e) => setData('nombre', e.target.value)}
                                     placeholder="e.j. Juan Manuel"
                                 />
@@ -111,6 +85,7 @@ export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, 
                                     id="lastname"
                                     type="text"
                                     value={data.apellido}
+                                    required
                                     onChange={(e) => setData('apellido', e.target.value)}
                                     placeholder="e.j. Mendez Perez"
                                 />
@@ -134,6 +109,7 @@ export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, 
                                     id="email"
                                     type="email"
                                     autoComplete="email"
+                                    required
                                     value={data.correo}
                                     onChange={(e) => setData('correo', e.target.value)}
                                     placeholder="e.j. juan.manuel@example.com"
@@ -159,6 +135,7 @@ export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, 
                                         id="password"
                                         type={showCurrentPassword ? 'text' : 'password'}
                                         autoComplete="current-password"
+                                        required
                                         value={data.password}
                                         onChange={(e) => setData('password', e.target.value)}
                                         placeholder="********"
@@ -203,6 +180,7 @@ export default function Editarusuarios({usuario, roles=[] }: {usuario: Usuario, 
                                         id="confirm_password"
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         autoComplete="current-password"
+                                        required
                                         value={data.confirm_password}
                                         onChange={(e) => setData('confirm_password', e.target.value)}
                                         placeholder="********"

@@ -48,4 +48,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class, 'usuario_id');
+    }
 }
