@@ -67,10 +67,13 @@ class DashboardController extends Controller
         //   LISTADO DE PLANEACIONES
         // ============================
 
-        $query = Planeacion::with(['usuario:id,nombre', 'documents'])
-            ->orderBy('created_at', 'desc');
+        $query = Planeacion::with([
+            'usuario:id,nombre',
+            'documents',
+            'horario:id,materia,dia,hora_inicio,hora_fin' // 👈 AQUI
+        ])->orderBy('created_at', 'desc');
 
-        if (!$user->hasRole('Administrador')) {
+        if (!$user->hasAnyRole(['Administrador', 'Director'])) {
             $query->where('usuario_id', $user->id);
         }
 
