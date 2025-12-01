@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Horario;
+use App\Models\Planeacion;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +18,10 @@ class HorarioController extends Controller
     {
         // Traemos solo los usuarios que son DOCENTES
         $docentes = User::role('docente')
-            ->withCount('horarios')           // Cuenta los horarios del docente
-            ->with('horarios')                // Para verificar si tiene horarios
+            ->whereHas('horarios')        //Solo docentes CON horarios
+            ->withCount('horarios')       // Cuenta horarios
+            ->with('horarios')            // Trae horarios
             ->get();
-
         return Inertia::render('horarios/lista-horarios', [
             'docentes' => $docentes,
         ]);
@@ -102,7 +103,18 @@ class HorarioController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $horario = Horario::findOrFail($id);
+
+        // Validar si está usado en alguna planeación
+        $usado = Planeacion::where('horario_id', $id)->exists();
+
+        if ($usado) {
+            return back()->with('error', 'No se puede eliminar el horario porque está asignado a una planeación.');
+        }
+
+        $horario->delete();
+
+        return to_route("horarios.index");
     }
 
     public function miHorario()

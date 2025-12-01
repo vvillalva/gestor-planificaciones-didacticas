@@ -26,7 +26,7 @@ class PlaneacionController extends Controller
         ])->orderBy('created_at', 'desc');
 
         // Si NO es administrador, filtrar por usuario
-        if (!$user->hasRole('Administrador')) {
+        if (!$user->hasAnyRole(['Administrador', 'Director'])) {
             $query->where('usuario_id', $user->id);
         }
 
