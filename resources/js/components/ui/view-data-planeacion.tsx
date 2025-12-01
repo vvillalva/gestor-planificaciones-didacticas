@@ -66,7 +66,7 @@ export default function ViewDataPlaneacion({ planeacion }: ViewDataPlaneacionPro
             </div>
             <div className="flex flex-col">
                 <Label className="text-neutral-600">Descripción</Label>
-                <p className="font-medium text-[20px]">{planeacion?.descripcion || 'No hay datos disponibles.'}</p>
+                <p className="font-medium text-[20px] whitespace-normal break-words">{planeacion?.descripcion || 'No hay datos disponibles.'}</p>
             </div>
             <div className="flex flex-col gap-2">
                 <Label className="text-neutral-600">Documentos</Label>

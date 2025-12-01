@@ -47,6 +47,7 @@ const docenteNavItems: NavItem[] = [
         title: 'Horarios',
         href: '/horarios',
         icon: Calendar,
+        permission: 'ver.horario',
     },
 ];
 
@@ -68,7 +69,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
-                <NavOpciones items={docenteNavItems} titulo="Director" />
+                { hasAny(['ver.horario']) && <NavOpciones items={docenteNavItems} titulo="Director" /> }
                 { hasAny(['ver.usuario', 'ver.roles']) && <NavOpciones items={adminNavItems} titulo="Administrador" /> }
             </SidebarContent>
 

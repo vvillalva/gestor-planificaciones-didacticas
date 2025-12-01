@@ -31,11 +31,15 @@ class PermissionSeeder extends Seeder
             "editar.roles",
             "eliminar.roles",
             "ver.graficas",
-            "ver.graficasAdmin"            
+            "ver.graficasAdmin",
+            "ver.horario",
+            "crear.horario",
+            "editar.horario",
+            "eliminar.horario",
         ];
 
         foreach ($permissions as $key => $value) {
-            Permission::create(["name" => $value]);
+            Permission::firstOrCreate(["name" => $value]);
         }
     }
 }

@@ -27,13 +27,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function CrearPlaneacion() {
+export default function CrearPlaneacion({ horarios = [] }: { horarios: [] }) {
     const { data, setData, post, processing, errors } = useForm({
         //Cedula
         titulo: '',
         descripcion: '',
         grado: '',
         grupo: '',
+        horario_id: '',
         //Entrevista Psicologica
         planeacion_archivo: null as File | null,
     });
@@ -78,6 +79,40 @@ export default function CrearPlaneacion() {
                                     <Label className="text-muted-foreground text-sm font-normal">Ingresa un nombre de planeación entendible</Label>
                                 )}
                             </div>
+                        </div>
+                    </div>
+                    <div className="materia flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                        <div className="w-full lg:w-[300px]">
+                            <Label id="materia" className="font-medium">
+                                Materia
+                            </Label>
+                        </div>
+                        <div className="flex w-full flex-col gap-2 lg:w-[405px]">
+
+                            {/* SELECT DE MATERIAS ASIGNADAS */}
+                            <select
+                                id="horario_id"
+                                value={data.horario_id}
+                                onChange={(e) => setData("horario_id", e.target.value)}
+                                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                required
+                            >
+                                <option value="">Seleccione una materia</option>
+
+                                {horarios.map((h) => (
+                                    <option key={h.id} value={h.id}>
+                                        {h.materia} — {h.dia} {h.hora_inicio.substring(0, 5)} -{' '}
+                                        {h.hora_fin.substring(0, 5)}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {/* ERRORES */}
+                            {errors.horario_id ? (
+                                <InputError message={errors.horario_id} />
+                            ) : (
+                                <Label className="text-muted-foreground text-sm font-normal"></Label>
+                            )}
                         </div>
                     </div>
                     <div className="grado flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">

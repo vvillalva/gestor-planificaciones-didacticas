@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Documento;
+use App\Models\Horario;
 use App\Models\Planeacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +19,11 @@ class PlaneacionController extends Controller
         $user = Auth::user();
 
         // Query base con todas las relaciones
-        $query = Planeacion::with(['usuario:id,nombre', 'documents'])
-            ->orderBy('created_at', 'desc');
+        $query = Planeacion::with([
+            'usuario:id,nombre',
+            'documents',
+            'horario:id,materia,dia,hora_inicio,hora_fin' // 👈 AQUI
+        ])->orderBy('created_at', 'desc');
 
         // Si NO es administrador, filtrar por usuario
         if (!$user->hasRole('Administrador')) {
@@ -36,7 +40,17 @@ class PlaneacionController extends Controller
 
     public function create()
     {
-        return Inertia::render('planeaciones/crear-planeaciones');
+        $usuarioId = Auth::id();
+
+        // Obtener horarios del usuario con su materia, hora, día
+        $horarios = Horario::where('usuario_id', $usuarioId)
+            ->orderBy('dia')
+            ->orderBy('hora_inicio')
+            ->get();
+
+        return Inertia::render('planeaciones/crear-planeaciones', [
+            'horarios' => $horarios,
+        ]);
     }
 
     public function store(Request $request)
@@ -48,6 +62,7 @@ class PlaneacionController extends Controller
                 'planeacion_archivo' => 'required|file|mimes:pdf,doc,docx,png,jpg,jpeg|max:5120',
                 'grado' => 'nullable|string|max:10',
                 'grupo' => 'nullable|string|max:2',
+                'horario_id' => 'required|exists:horarios,id',
             ],
             [
                 'titulo.max' => 'El título no puede exceder los 255 caracteres.',
@@ -58,6 +73,7 @@ class PlaneacionController extends Controller
                 'planeacion_archivo.max' => 'El archivo no puede exceder los 5 MB.',
                 'planeacion_archivo.mimes' => 'El archivo debe ser un tipo válido: pdf, doc, docx, png, jpg, jpeg.',
                 'planeacion_archivo.required' => 'El archivo de planeación es obligatorio.',
+                'horario_id.required' => 'Debe seleccionar una materia.',
             ]
         );
 
@@ -69,6 +85,7 @@ class PlaneacionController extends Controller
             'grado' => $request->grado,
             'grupo' => $request->grupo,
             'usuario_id' => Auth::id(),
+            'horario_id' => $request->horario_id, // 👈 AQUI
         ]);
 
         // 2️⃣ Guardar archivo usando Storage (mejor práctica)

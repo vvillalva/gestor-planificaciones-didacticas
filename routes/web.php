@@ -95,6 +95,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('permission:ver.roles|crear.roles|editar.roles|eliminar.roles');
 
     Route::resource('horarios', HorarioController::class)->names('horarios');
+    Route::get('/mi-horario', [HorarioController::class, 'miHorario'])
+    ->name('horarios.mi-horario');
 
 });
 

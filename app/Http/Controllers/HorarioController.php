@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Horario;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class HorarioController extends Controller
@@ -70,7 +71,14 @@ class HorarioController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Obtener al docente y sus horarios
+        $usuario = User::with('horarios')
+            ->findOrFail($id);
+
+        return Inertia::render('horarios/detalle-horario', [
+            'usuario' => $usuario,
+            'horarios' => $usuario->horarios,
+        ]);
     }
 
     /**
@@ -95,5 +103,21 @@ class HorarioController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function miHorario()
+    {
+        $usuarioId = Auth::id();
+
+        // obtener todos los horarios del docente
+        $horarios = Horario::where('usuario_id', $usuarioId)
+            ->orderBy('dia')
+            ->orderBy('hora_inicio')
+            ->get();
+
+        return Inertia::render('horarios/mi-horario', [
+            'usuario' => Auth::user(),
+            'horarios' => $horarios,
+        ]);
     }
 }

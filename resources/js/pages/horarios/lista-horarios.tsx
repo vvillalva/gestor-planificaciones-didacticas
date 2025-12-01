@@ -7,7 +7,7 @@ import type { BreadcrumbItem } from '@/types';
 import Encabezado from '@/components/encabezado';
 import { Users } from 'lucide-react';
 import { DataTable } from '@/components/datatable/datatable';
-import { columnasUsuario } from '@/components/datatable/column';
+import { columnasHorario, columnasUsuario } from '@/components/datatable/column';
 import { useCan } from '@/hooks/useCan';
 import { ConfirmProvider } from '@/providers/ConfirmProvider';
 
@@ -19,7 +19,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ListaHorarios({ docentes = [] }: { docentes: [] }) {
-    console.log(docentes);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Horarios" />
@@ -31,7 +30,7 @@ export default function ListaHorarios({ docentes = [] }: { docentes: [] }) {
                 />
                 <ConfirmProvider>
                     <DataTable
-                        columns={columnasUsuario}
+                        columns={columnasHorario}
                         data={docentes}
                         resourceName="horarios"
                         labelButton="Nuevo usuario"

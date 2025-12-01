@@ -167,6 +167,166 @@ export const columnasUsuario: ColumnDef<ColumnaUsuario>[] = [
         cell: ({ row }) => <ActionsCellUsuario row={row} />,
     },
 ];
+//** Configuración de Tabla Horarios */
+export type ColumnaHorario = {
+    id: number;
+    nombre: string;
+    apellido: string;
+    correo: string;
+    rol: string;
+    created_at: string;
+};
+
+function ActionsCellHorario({ row }: { row: { original: RowData } }) {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const { onDeleteClick } = useDeleteAlert('horarios.destroy');
+    const { has, hasAny } = useCan();
+    return (
+        <>
+            <div className="flex flex-row justify-end">
+                <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
+                            <EllipsisVertical />
+                            <span className="sr-only">Opciones</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-32">
+                        <DropdownMenuItem>
+                            <Link href={route('horarios.show', row.original.id)} className="flex w-full flex-row items-center gap-1">
+                                <Pencil /> Ver
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem variant="destructive"
+                            onSelect={async (e) => {
+                                e.preventDefault();
+                                // 1. cerramos el menú
+                                setMenuOpen(false);
+                                // 2. esperamos un frame para que cierre sin congelar
+                                await new Promise((r) => requestAnimationFrame(r));
+                                // 3. ejecutamos la eliminación
+                                onDeleteClick(row.original.id);
+                            }}>
+                            <Trash2 />
+                            Borrar
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+            {/* {hasAny(['editar.usuario', 'eliminar.usuario']) && (
+                <div className="flex flex-row justify-end">
+                    <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="text-muted-foreground data-[state=open]:bg-muted flex size-8" size="icon">
+                                <EllipsisVertical />
+                                <span className="sr-only">Opciones</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-32">
+                            {has('editar.usuario') && 
+                                <DropdownMenuItem>
+                                    <Link href={route('usuarios.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
+                                        <Pencil /> Editar
+                                    </Link>
+                                </DropdownMenuItem>
+                            }
+                            {has('eliminar.usuario') &&
+                                <DropdownMenuItem variant="destructive"
+                                    onSelect={async (e) => {
+                                        e.preventDefault();
+                                        // 1. cerramos el menú
+                                        setMenuOpen(false);
+                                        // 2. esperamos un frame para que cierre sin congelar
+                                        await new Promise((r) => requestAnimationFrame(r));
+                                        // 3. ejecutamos la eliminación
+                                        onDeleteClick(row.original.id);
+                                    }}>
+                                    <Trash2 />
+                                    Borrar
+                                </DropdownMenuItem>
+                            }
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )} */}
+        </>
+    );
+};
+
+export const columnasHorario: ColumnDef<ColumnaHorario>[] = [
+    {
+        accessorKey: 'id',
+        header: ({ column }) => {
+            return (
+                <div className="w-20">
+                    <Button className="flex" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Identificador
+                        <ArrowUpDown />
+                    </Button>
+                </div>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="pl-3 lowercase">
+                <span>{row.getValue('id')}</span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'name',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Nombre del usuario
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>
+                    {row.original.nombre} {row.original.apellido}
+                </span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'email',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Correo electrónico
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>{row.original.correo}</span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'rol',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Rol
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => (
+            <div className="w-full pl-3">
+                <span>{row.original.rol}</span>
+            </div>
+        ),
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => <ActionsCellHorario row={row} />,
+    },
+];
 
 //** Configuración de Tabla Roles */
 export type PermissionItem = {
@@ -186,7 +346,7 @@ function ActionsCellRoles({ row }: { row: { original: RowData } }) {
     const { has, hasAny } = useCan();
     return (
         <>
-            {hasAny(['editar.rol', 'eliminar.rol']) && (
+            {hasAny(['editar.roles', 'eliminar.roles']) && (
                 <div className="flex flex-row justify-end">
                     <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
                         <DropdownMenuTrigger asChild>
@@ -196,14 +356,14 @@ function ActionsCellRoles({ row }: { row: { original: RowData } }) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-32">
-                            {has('editar.rol') &&
+                            {has('editar.roles') &&
                                 <DropdownMenuItem>
                                     <Link href={route('roles.edit', row.original.id)} className="flex w-full flex-row items-center gap-1">
                                         <Pencil /> Editar
                                     </Link>
                                 </DropdownMenuItem>
                             }
-                            {has('eliminar.rol') &&
+                            {has('eliminar.roles') &&
                                 <DropdownMenuItem variant="destructive"
                                 onSelect={async (e) => {
                                         e.preventDefault();
@@ -309,6 +469,12 @@ export type ColumnaPlaneacion = {
     titulo: string;
     estatus: string;
     created_at: string;
+    horario?: {
+        materia: string;
+        dia: string;
+        hora_inicio: string;
+        hora_fin: string;
+    }
 };
 
 function ActionsCellPlaneacion({ row }: { row: { original: RowDataPlaneacion } }) {
@@ -401,6 +567,40 @@ export const columnasPlaneaciones: ColumnDef<ColumnaPlaneacion>[] = [
             return (
                 <div className="w-full pl-3">
                     <span>{row.original.titulo || 'Sin título'}</span>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: 'horario',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    Horario
+                    <ArrowUpDown />
+                </Button>
+            );
+        },
+        cell: ({ row }) => {
+            const h = row.original.horario;
+
+            if (!h) {
+                return (
+                    <div className="pl-3 text-gray-400 italic">
+                        Sin horario
+                    </div>
+                );
+            }
+
+            return (
+                <div className="pl-3">
+                    <div className="font-medium">{h.materia}</div>
+                    <div className="text-sm text-muted-foreground">
+                        {h.dia} — {h.hora_inicio.substring(0, 5)} a {h.hora_fin.substring(0, 5)}
+                    </div>
                 </div>
             );
         },
