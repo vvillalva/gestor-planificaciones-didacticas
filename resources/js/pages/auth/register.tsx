@@ -10,6 +10,7 @@ import AuthLayout from '@/layouts/auth-layout';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type RegisterForm = {
+    rfc: string;
     nombre: string;
     apellido: string;
     correo: string;
@@ -27,6 +28,7 @@ export default function Register({ roles=[] }: { roles:RolProps[] }) {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
+        rfc: '',
         nombre: '',
         apellido: '',
         correo: '',
@@ -48,6 +50,19 @@ export default function Register({ roles=[] }: { roles:RolProps[] }) {
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
+                        <div className="grid gap-2">
+    <Label htmlFor="rfc">RFC</Label>
+    <Input
+        id="rfc"
+        type="text"
+        required
+        placeholder="e.j. ABCD123456XYZ"
+        value={data.rfc}
+        onChange={(e) => setData('rfc', e.target.value)}
+        disabled={processing}
+    />
+    <InputError message={errors.rfc} className="mt-2" />
+</div>
                         <Label htmlFor="name">Nombre</Label>
                         <Input
                             id="name"
