@@ -55,7 +55,7 @@ export default function Login({ status }: LoginProps) {
 
                     <div className="grid gap-2">
                         <div className="flex items-center">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">Contraseña</Label>
                         </div>
                         <Input
                             id="password"
@@ -77,7 +77,7 @@ export default function Login({ status }: LoginProps) {
                 </div>
 
             </form>
-            <div className='flex justify-center mt-4 text-sm gap-2'>
+            {/* <div className='flex justify-center mt-4 text-sm gap-2'>
                 <span>¿Aun no tienes cuenta? </span>
                 <Link
                     href={route('register')}
@@ -85,7 +85,7 @@ export default function Login({ status }: LoginProps) {
                 >
                     Regístrate
                 </Link>
-            </div>
+            </div> */}
             {status && <div className="mb-4 text-center text-sm font-medium text-neutral-800">{status}</div>}
         </AuthLayout>
     );

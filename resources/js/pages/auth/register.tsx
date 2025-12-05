@@ -51,7 +51,7 @@ export default function Register({ roles=[] }: { roles:RolProps[] }) {
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <div className="grid gap-2">
-    <Label htmlFor="rfc">RFC</Label>
+    {/* <Label htmlFor="rfc">RFC</Label>
     <Input
         id="rfc"
         type="text"
@@ -61,7 +61,7 @@ export default function Register({ roles=[] }: { roles:RolProps[] }) {
         onChange={(e) => setData('rfc', e.target.value)}
         disabled={processing}
     />
-    <InputError message={errors.rfc} className="mt-2" />
+    <InputError message={errors.rfc} className="mt-2" /> */}
 </div>
                         <Label htmlFor="name">Nombre</Label>
                         <Input

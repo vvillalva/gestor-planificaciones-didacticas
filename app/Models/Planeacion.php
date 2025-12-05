@@ -16,6 +16,7 @@ class Planeacion extends Model
         'descripcion',
         'grado',
         'grupo',
+        'comentario',
         'usuario_id',
         'horario_id', 
     ];

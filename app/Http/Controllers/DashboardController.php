@@ -16,7 +16,7 @@ class DashboardController extends Controller
         //   FILTRO POR ROL
         // ============================
 
-        $esAdmin = $user->hasRole('Administrador');
+        $esAdmin = $user->hasAnyRole(['Administrador', 'Director']);
 
         // Base query según el rol
         $baseQuery = Planeacion::query();

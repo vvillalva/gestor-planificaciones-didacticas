@@ -277,6 +277,7 @@ class PlaneacionController extends Controller
                 'string',
                 'in:en_revision,rechazado,aprobado',
             ],
+            'comentario' => ['sometimes', 'filled', 'string'],
         ], [
             'estatus.required' => 'Debes seleccionar un estatus.',
             'estatus.in' => 'El estatus seleccionado no es válido.',
@@ -285,6 +286,7 @@ class PlaneacionController extends Controller
         // 🔹 Actualizar la planeación
         $planeacion->update([
             'estatus' => $validated['estatus'],
+            'comentario' => $validated['comentario'] ?? null,
         ]);
 
         // 🔹 Redirigir con mensaje

@@ -28,11 +28,11 @@ export default function ListaPlaneaciones({ planeaciones = [] }: { planeaciones:
                     description="Revisa las pleaciones registradas dentro del sistema ."
                     icon={<Users className="h-[20px] w-[20px]" />}
                 />
-                <div className='flex flex-row justify-end'>
+                {/* <div className='flex flex-row justify-end'>
                     <Link href={route('horarios.mi-horario')}>
                         <Button>Ver mi horario</Button>
                     </Link>
-                </div>
+                </div> */}
                 <ConfirmProvider>                    
                     <DataTable
                         columns={columnasPlaneaciones}

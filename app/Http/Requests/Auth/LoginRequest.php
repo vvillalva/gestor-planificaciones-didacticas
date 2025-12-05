@@ -45,7 +45,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'correo' => __('auth.failed'),
+                 'correo' => __('Credenciales incorrectas, por favor intenta de nuevo.'),
             ]);
         }
 

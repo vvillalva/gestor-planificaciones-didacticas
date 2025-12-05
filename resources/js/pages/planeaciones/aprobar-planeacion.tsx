@@ -40,6 +40,7 @@ interface Planeacion {
     estatus: string;
     grado: string;
     grupo: string;
+    comentario: string;
     documents: Documento;
     usuario: Usuario;
 }
@@ -48,6 +49,7 @@ export default function AprobarPlaneacion({ planeacion }: { planeacion: Planeaci
     console.log(planeacion);
     const { data, setData, put, processing, errors } = useForm({
         estatus: planeacion.estatus,
+        comentario: planeacion.comentario || '',
     });
 
     // 🔹 No hay documentos previos todavía, así que pasamos un array vacío
@@ -72,9 +74,10 @@ export default function AprobarPlaneacion({ planeacion }: { planeacion: Planeaci
                         <div className="estatus flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                             <div className="w-full lg:w-[300px]">
                                 <Label id="estatus" className="font-medium">
-                                    Estatus de entrevista
+                                    Estatus de planeación
                                 </Label>
                             </div>
+
                             <div className="flex w-full flex-col gap-2 lg:w-[405px]">
                                 <div className="flex flex-col gap-2">
                                     <Select
@@ -102,6 +105,32 @@ export default function AprobarPlaneacion({ planeacion }: { planeacion: Planeaci
 
                                     {errors.estatus && (
                                         <p className="text-sm text-red-500">{errors.estatus}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="descripcion flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                            <div className="w-full lg:w-[300px]">
+                                <Label id="relato" className="font-medium">
+                                    Comentario sobre la planeación
+                                </Label>
+                            </div>
+                            <div className="flex w-full flex-col gap-2 lg:w-[405px]">
+                                <div className="flex flex-col gap-2">
+                                    <Textarea
+                                        className="h-[260px]"
+                                        required
+                                        autoFocus
+                                        placeholder="Descripción de la planeacion..."
+                                        value={data.comentario}
+                                        onChange={(e) => setData('comentario', e.target.value)}
+                                    />
+                                    {errors.comentario ? (
+                                        <p className="text-sm text-red-500">{errors.comentario}</p>
+                                    ) : (
+                                        <Label className="text-muted-foreground text-sm font-normal">
+                                            Ingresa un comentario claro sobre la planeacion a ingresar.
+                                        </Label>
                                     )}
                                 </div>
                             </div>
