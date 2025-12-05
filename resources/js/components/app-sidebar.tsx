@@ -1,11 +1,12 @@
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Calendar, Folder, LayoutGrid, Shield, SquareLibrary, Users } from 'lucide-react';
 import AppLogo from './app-logo';
+import { NavOpciones } from './nav-options';
+import { useCan } from '@/hooks/useCan';
 
 const mainNavItems: NavItem[] = [
     {
@@ -13,22 +14,45 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
-];
-
-const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
+        title: 'Planeaciones',
+        href: '/planeaciones',
+        icon: BookOpen,
+        permission: 'ver.planeacion',
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Documentos',
+        href: '/documentos',
+        icon: SquareLibrary,
+        permission: 'ver.documento',
+    },
+];
+
+const adminNavItems: NavItem[] = [
+    {
+        title: 'Usuarios',
+        href: '/usuarios',
+        icon: Users,
+        permission: 'ver.usuario',
+    },
+    {
+        title: 'Roles',
+        href: '/roles',
+        icon: Shield,
+        permission: 'ver.roles',
+    },
+];
+const docenteNavItems: NavItem[] = [
+    {
+        title: 'Horarios',
+        href: '/horarios',
+        icon: Calendar,
+        permission: 'ver.horario',
     },
 ];
 
 export function AppSidebar() {
+    const { hasAny, has } = useCan();
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -45,10 +69,11 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
+                { hasAny(['ver.horario']) && <NavOpciones items={docenteNavItems} titulo="Director" /> }
+                { hasAny(['ver.usuario', 'ver.roles']) && <NavOpciones items={adminNavItems} titulo="Administrador" /> }
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
