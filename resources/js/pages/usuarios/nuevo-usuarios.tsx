@@ -62,12 +62,9 @@ export default function AddUser({ roles=[] }: { roles:RolProps[] }) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Crear usuario" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-8">
-                <Encabezado title="Nuevo Usuario" description="Revisa los diferentes usuarios registrados dentro del sistema." separator={true}/>
+                <Encabezado title="Nuevo Usuario" description="Revisa los diferentes usuarios registrados dentro del sistema." separator={true} />
                 <form onSubmit={createUser} className="flex flex-col gap-10 pt-10">
-                    <div className="nombre flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
-                        <div className="w-full lg:w-[300px]">
-                            <Label id="name" className="font-medium">
-                                <div className="rol flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                    <div className="rol flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
                         <div className="w-full lg:w-[300px]">
                             <Label id="rol" className="font-medium">
                                 Rol
@@ -95,6 +92,9 @@ export default function AddUser({ roles=[] }: { roles:RolProps[] }) {
                             </div>
                         </div>
                     </div>
+                    <div className="nombre flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
+                        <div className="w-full lg:w-[300px]">
+                            <Label id="name" className="font-medium">
                                 Nombre
                             </Label>
                         </div>
@@ -245,34 +245,6 @@ export default function AddUser({ roles=[] }: { roles:RolProps[] }) {
                                         )}
                                     </Button>
                                 </div>
-                                {errors.password ? (
-                                    <InputError message={errors.password} />
-                                ) : (
-                                    <Label className="text-muted-foreground text-sm font-normal"></Label>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rol flex w-full flex-col gap-4 lg:flex-row lg:gap-[180px]">
-                        <div className="w-full lg:w-[300px]">
-                            <Label id="rol" className="font-medium">
-                                Rol
-                            </Label>
-                        </div>
-                        <div className="flex w-full flex-col gap-4 lg:w-[405px]">
-                            <div className="flex flex-col gap-2">
-                                <Select value={data.rol} onValueChange={(value) => setData('rol', value)}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Selecciona" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {roles.map((rol) => (
-                                            <SelectItem key={rol.id} value={rol.name}>
-                                                {rol.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
                                 {errors.password ? (
                                     <InputError message={errors.password} />
                                 ) : (
